@@ -1,0 +1,22 @@
+# Conceptual Analysis — Phase 0
+
+1. Explain in one sentence why a functionally correct RTL can fail in Physical Implementation.
+Answer: Physical constraints like timing, routing, and placement may prevent the RTL from meeting real-world requirements even if functionally correct.
+
+2. List three differences between logic gates and standard cell instances.
+Answer:
+- Logic gates are abstract and ideal; standard cells have geometry and drive strength.
+- Logic gates have no physical delay; standard cells have actual RC delays.
+- Logic gates ignore placement; standard cells must fit into rows and respect spacing rules.
+
+3. What is the physical equivalent of a wire in a netlist?
+Answer: A routed net with length, resistance, and capacitance.
+
+4. Define slack in one sentence and explain why it matters.
+Answer: Slack is the difference between required arrival time and actual arrival time of a signal; negative slack indicates a timing violation that must be fixed.
+
+5. Give an example of a macro and explain why placement restrictions exist.
+Answer: Example: SRAM block. Placement restrictions exist because macros have fixed size and shape, which can block routing and affect timing.
+
+6. What does STA verify that simulation cannot?
+Answer: STA checks all paths for timing violations under worst-case conditions, while simulation only verifies functional correctness for specific input vectors.
