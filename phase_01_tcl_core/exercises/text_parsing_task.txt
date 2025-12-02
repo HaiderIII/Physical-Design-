@@ -1,0 +1,11 @@
+# Text Parsing Task — Phase 1
+
+1. Create a variable `cell_name` and assign it the value "AND2X1".
+
+2. Print "Cell: AND2X1" using the variable.
+
+3. Create a list of nets: net1, net2, net3. Print the first net.
+
+4. Split the string "FF1 Q D CLK" into a list and print the third element.
+
+5. Write a loop to print each net in the list.
