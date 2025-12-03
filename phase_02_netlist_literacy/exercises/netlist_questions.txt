@@ -1,0 +1,113 @@
+PHASE 2 — NETLIST LITERACY
+NETLIST ANALYSIS EXERCISES
+=========================
+
+Reference netlist:
+------------------
+File: simple_structural.v
+
+This netlist is structural.
+No behavioral logic.
+No simulation.
+All reasoning must be topology-based.
+
+
+------------------------------------------------------------
+SECTION A — INSTANCE AND NET ENUMERATION
+------------------------------------------------------------
+
+1. List all instances present in the netlist.
+   For each instance, identify:
+   - Instance name
+   - Cell type
+
+2. List all nets declared in the design.
+
+3. For each net, identify:
+   - The expected driver
+   - The expected loads
+
+   If a driver cannot be identified with full certainty,
+   explain why and state the assumption made.
+
+
+------------------------------------------------------------
+SECTION B — LOGIC CLASSIFICATION
+------------------------------------------------------------
+
+4. Identify which nets belong exclusively to combinational logic.
+
+5. Identify which instances are sequential.
+
+6. Identify the exact boundary between combinational
+   and sequential logic in the netlist.
+
+   Explain what makes this boundary explicit.
+
+
+------------------------------------------------------------
+SECTION C — TIMING DIRECTION AND GRAPH
+------------------------------------------------------------
+
+7. Identify all primary inputs and primary outputs.
+
+8. Describe how signal direction propagates through the netlist:
+   from inputs, through instances, to outputs.
+
+9. Draw (logically, not graphically) the directed graph of the design:
+   - Nodes: instances
+   - Edges: nets
+   - Direction: driver → loads
+
+
+------------------------------------------------------------
+SECTION D — PATH CLASSIFICATION
+------------------------------------------------------------
+
+10. Identify all timing path categories present in the design:
+
+    - IN → FF
+    - FF → FF
+    - FF → OUT
+
+11. For each category:
+    - Name one concrete example path
+    - List the sequence of instances and nets involved
+
+12. Explain why these path classes are treated differently
+    during static timing analysis.
+
+
+------------------------------------------------------------
+SECTION E — TCL IMPLEMENTATION
+------------------------------------------------------------
+
+13. Write Tcl code that:
+    - Parses the netlist text
+    - Lists all instances and their types
+
+14. Write Tcl code that:
+    - Lists all declared nets
+
+15. Extend the Tcl code to:
+    - Correlate instances and nets
+    - Approximate driver/load relationships
+
+16. Clearly state the limitations of your Tcl-based analysis.
+
+
+------------------------------------------------------------
+OUTPUT RULES
+------------------------------------------------------------
+
+- Tcl code answers must be stored in:
+  exercises/netlist_answers.tcl
+
+- Written answers must be stored in:
+  exercises/netlist_answers.txt
+
+- No EDA tools.
+- No waveform reasoning.
+- All deductions must be text-based and justifiable.
+
+End of exercises.
