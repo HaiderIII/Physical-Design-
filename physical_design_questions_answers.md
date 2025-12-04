@@ -20,239 +20,238 @@ Comprehensive reference for **junior-level physical design interviews**, coverin
 ### Q1: What is Core Utilization and how is it calculated?
 
 **Answer:**  
-Core utilization is the fraction of the design core area that is occupied by standard cells, macros, or blockages relative to the total core area. It is a key metric in floorplanning and placement because it affects routability, congestion, and PPA (Performance, Power, Area).
+Core utilization is the fraction of the design core area that is occupied by standard cells, macros, or blockages relative to the total core area. It affects routability, congestion, and PPA (Performance, Power, Area).
 
-The formula is:
+Formula:
 
 $$
 \text{Core Utilization (\%)} = \frac{\text{Occupied Core Area}}{\text{Total Core Area}} \times 100
 $$
 
-- High utilization (>80%) can create routing congestion and timing violations.  
-- Low utilization (<60%) underuses silicon, wasting area.
+- High utilization (>80%) may create congestion and timing violations.  
+- Low utilization (<60%) underuses silicon.
 
 ---
 
-### Q2: Explain the role of LEF, DEF, and SDC files in physical design.
+### Q2: Explain LEF, DEF, and SDC files.
 
 **Answer:**  
-- **LEF (Library Exchange Format):** Contains geometric and electrical data for standard cells, macros, pin locations, metal layers, routing directions, and design rules. Used by PnR tools for placement and routing.  
-- **DEF (Design Exchange Format):** Contains the placed and routed design, including cell positions, orientations, nets, pins, and routing paths. Output of PnR for verification or downstream tools.  
-- **SDC (Synopsys Design Constraints):** Contains timing constraints such as clocks, input/output delays, false paths, multi-cycle paths, and exceptions. Used by STA tools to compute setup and hold slacks.
+
+- **LEF (Library Exchange Format):** Contains geometric/electrical info for cells, macros, pins, metal layers, routing directions, and design rules.  
+- **DEF (Design Exchange Format):** Contains placed/routed design: cell positions, orientations, nets, pins, routes. Output from PnR.  
+- **SDC (Synopsys Design Constraints):** Contains clocks, input/output delays, false/multi-cycle paths, exceptions for STA.
 
 ---
 
-### Q3: What is clock skew and its impact on setup and hold timing?
+### Q3: Clock skew and impact
 
 **Answer:**  
-Clock skew is the difference in arrival times of the clock signal at different flip-flops.  
-- **Local skew:** Difference between two flip-flops in a path.  
-- **Global skew:** Difference between earliest and latest clock arrival in the design.  
+Clock skew = difference in arrival times at flip-flops.  
+
+- **Local skew:** Between two FFs on same path  
+- **Global skew:** Between earliest and latest FFs  
 
 Impact:  
-- Positive skew (clock arrives later at capture FF) improves setup margin but may hurt hold.  
-- Negative skew (clock arrives earlier at capture FF) improves hold margin but may hurt setup.
+- Positive skew (clock arrives late at capture FF): improves setup, may hurt hold  
+- Negative skew (clock arrives early): improves hold, may hurt setup
 
 ---
 
-### Q4: Explain setup and hold timing constraints with formulas.
+### Q4: Setup and hold timing constraints
 
 **Answer:**  
 
-- **Setup timing:** Data must be stable at the capture flip-flop before the clock edge.  
+- **Setup:** Data stable before clock edge  
 
 $$
 T_\text{clk} \ge T_\text{CQ(max)} + D_\text{max} + T_\text{setup} - T_\text{skew}
 $$
 
-- **Hold timing:** Data must remain stable at the capture flip-flop after the clock edge.  
+- **Hold:** Data stable after clock edge  
 
 $$
 T_\text{CQ(min)} + D_\text{min} \ge T_\text{hold} + T_\text{skew}
 $$
 
-Where:  
-- \(T_\text{CQ}\) = clock-to-Q delay of the launch FF  
-- \(D\) = combinational path delay  
-- \(T_\text{setup}\), \(T_\text{hold}\) = timing requirements  
-- \(T_\text{skew}\) = clock skew
+Where \(T_\text{CQ}\) = clock-to-Q, \(D\) = combinational delay
 
 ---
 
-### Q5: How can setup and hold violations be fixed?
+### Q5: Fixing setup/hold violations
 
 **Answer:**  
-- **Setup violation (data arrives too late):**  
-  - Insert positive skew  
-  - Upsize slow cells  
-  - Add buffers to reduce critical path delay  
-  - Retiming or path restructuring  
-- **Hold violation (data changes too early):**  
-  - Insert negative skew  
-  - Downsize cells to increase path delay  
-  - Add buffers to slow fast paths
+
+- **Setup violation:** positive skew, upsize cells, buffer, retiming  
+- **Hold violation:** negative skew, downsize cells, buffer
 
 ---
 
-### Q6: What is a false path in STA and why is it ignored?
+### Q6: False path
 
 **Answer:**  
-- A **false path** is a logic path that never activates during normal operation (e.g., an unused branch of a multiplexer).  
-- Ignoring false paths avoids overly pessimistic timing and unnecessary fixes.
+A path that never activates (e.g., unused MUX branch). Ignored in STA.
 
 ---
 
-### Q7: What are placement and routing blockages?
+### Q7: Placement and routing blockages
 
 **Answer:**  
-- **Placement blockage:** Area where cells or macros cannot be placed. Can be hard (completely forbidden) or soft (density-limited).  
-- **Routing blockage:** Area where routing of metal layers is restricted or forbidden.  
-- Proper blockages avoid congestion and help timing closure.
+
+- Placement blockage: area where cells/macros cannot be placed (hard/soft)  
+- Routing blockage: area restricted for routing  
+- Prevent congestion and help timing closure
 
 ---
 
-### Q8: What is a keepout vs a blockage?
+### Q8: Keepout vs blockage
 
 **Answer:**  
-- **Keepout:** Surrounds a macro to prevent placement nearby; moves with the macro. Typical margin ~0.5 μm.  
-- **Blockage:** Fixed, independent of macros; prevents routing or placement in specific areas.
+
+- Keepout: surrounds macro, moves with it (~0.5 μm margin)  
+- Blockage: fixed, independent of macros
 
 ---
 
-### Q9: How do you mitigate congestion in floorplanning?
+### Q9: Mitigating congestion
 
 **Answer:**  
-- Limit placement density  
-- Group macros in hierarchy  
-- Promote higher metal layers for critical routes  
+
+- Limit density  
+- Group macros  
+- Promote higher metal layers  
 - Split high-fanout nets  
-- Use strategic soft/hard blockages  
+- Use blockages strategically
 
 ---
 
 ## Clock Tree Synthesis (CTS) & Timing
 
-### Q10: What is CTS and why is it needed?
+### Q10: CTS definition
 
 **Answer:**  
-- **CTS (Clock Tree Synthesis):** Distributes the clock signal uniformly across the core.  
-- Uses H-tree or A-tree structures with buffers to reduce skew and insertion delay.  
-- Objective: uniform clock arrival, minimal skew, minimal voltage drop.
+CTS distributes clock uniformly using H-tree or A-tree, minimizing skew and insertion delay.
 
 ---
 
-### Q11: What are source and network latency in CTS?
+### Q11: Source & network latency
 
 **Answer:**  
-- **Source latency:** Delay from clock source to launching flip-flop.  
-- **Network latency:** Delay along clock routing, buffers, and cells.  
-- Total clock latency = source latency + network latency.
+- Source latency: from clock source to launching FF  
+- Network latency: delay along clock tree  
+- Total = source + network latency
 
 ---
 
-### Q12: Why is Multi-Mode Multi-Corner (MMMC) STA important?
+### Q12: Multi-mode multi-corner (MMMC)
 
 **Answer:**  
-- Tests timing under different operating conditions and PVT corners (process, voltage, temperature).  
-- Ensures setup and hold are met for worst-case and best-case scenarios.  
-- Example: Worst-case voltage 0.9 V at 125°C; slow process for setup, fast process for hold.
+- STA tested across PVT corners ensures setup/hold for worst/best-case  
+- Example: 0.9 V at 125°C
 
 ---
 
 ## Static Timing Analysis (STA)
 
-### Q13: Compute setup and hold slack for a data path
+### Q13: Compute setup and hold slack
 
 **Given:**  
-- \(T_\text{CQ(max)} = 80\,\text{ps}, D_\text{max} = 420\,\text{ps}, T_\text{setup} = 90\,\text{ps}, T_\text{clk} = 700\,\text{ps}, T_\text{skew} = 30\,\text{ps}\)  
-- \(T_\text{CQ(min)} = 25\,\text{ps}, D_\text{min} = 65\,\text{ps}, T_\text{hold} = 50\,\text{ps}\)
+- $T_\text{CQ(max)} = 80~\text{ps}$, $D_\text{max} = 420~\text{ps}$, $T_\text{setup} = 90~\text{ps}$, $T_\text{clk} = 700~\text{ps}$, $T_\text{skew} = 30~\text{ps}$  
+- $T_\text{CQ(min)} = 25~\text{ps}$, $D_\text{min} = 65~\text{ps}$, $T_\text{hold} = 50~\text{ps}$
 
 **Answer:**  
-- Setup required period: \(80 + 420 + 90 + 30 = 620\,\text{ps}\)  
-- Slack: \(T_\text{clk} - T_\text{clk,min} = 700 - 620 = 80\,\text{ps}\) → setup met  
-- Hold margin: \(25 + 65 = 90 ≥ 50 + 30 = 80\,\text{ps}\) → margin = 10 ps → hold met  
+
+- Setup period:  
+$$
+T_\text{clk,min} = T_\text{CQ(max)} + D_\text{max} + T_\text{setup} + T_\text{skew} = 80 + 420 + 90 + 30 = 620~\text{ps}
+$$
+
+- Slack:  
+$$
+\text{Slack} = T_\text{clk} - T_\text{clk,min} = 700 - 620 = 80~\text{ps} \quad (\text{setup met})
+$$
+
+- Hold margin:  
+$$
+T_\text{CQ(min)} + D_\text{min} = 25 + 65 = 90~\text{ps} \ge T_\text{hold} + T_\text{skew} = 50 + 30 = 80~\text{ps}
+$$
+→ Margin = 10 ps (hold met)
 
 ---
 
 ### Q14: Skew impact example
 
 **Answer:**  
+
 - Positive skew (+20 ps): setup slack increases, hold satisfied  
-- Negative skew (-20 ps): setup slack decreases, hold still satisfied  
+- Negative skew (-20 ps): setup slack decreases, hold still satisfied
 
 ---
 
-### Q15: Multi-cycle path handling
+### Q15: Multi-cycle path
 
 **Answer:**  
-- Required arrival for N-cycle path:  
+
 $$
 T_\text{required} = N \cdot T_\text{clk} - T_\text{setup}
 $$  
-- STA calculates slack accordingly.
+
+Slack calculated according to multi-cycle specification.
 
 ---
 
 ### Q16: Setup and hold numeric example
 
-**Answer:**  
-- Setup slack = -40 ps → path needs adjustment (buffers or upsizing)  
+- Setup slack = -40 ps → path needs adjustment  
 - Hold slack = 170 ps → safe
 
 ---
 
 ### Q17: Setup and hold formulas
 
-**Answer:**  
 - Setup slack:  
 $$
-\text{Slack} = T_\text{clk} + T_\text{skew} - T_\text{setup} - (T_\text{CQ(max)} + D_\text{max})
-$$  
+\text{Slack}_\text{setup} = T_\text{clk} + T_\text{skew} - T_\text{setup} - (T_\text{CQ(max)} + D_\text{max})
+$$
+
 - Hold margin:  
 $$
-\text{Margin} = T_\text{CQ(min)} + D_\text{min} - (T_\text{hold} + T_\text{skew})
+\text{Margin}_\text{hold} = T_\text{CQ(min)} + D_\text{min} - (T_\text{hold} + T_\text{skew})
 $$
 
 ---
 
 ## Power, IR Drop & Electromigration
 
-### Q18: Explain power grid and IR drop
+### Q18: Power grid and IR drop
 
-**Answer:**  
-- Distributes VDD/VSS through horizontal/vertical metal layers connected with vias.  
-- **IR drop:** Voltage drop due to resistance and current in the metal. Affects timing.  
-- Mitigation: Use wider metal layers, shield critical nets, dedicated power routes.
+- Distributes VDD/VSS via metal layers  
+- IR drop = voltage loss along power nets  
+- Mitigation: wider metals, shields, dedicated routing
 
 ---
 
-### Q19: Electromigration (EM) example
+### Q19: Electromigration (EM)
 
-**Given:** w=0.6 μm, t=0.4 μm, I=2.5 mA, allowed 1 mA/μm²  
-
-**Answer:**  
-- Area = 0.6 × 0.4 = 0.24 μm²  
-- Current density = 2.5 / 0.24 ≈ 10.4 mA/μm² → exceeds limit  
-- Fix: widen trace, parallel wires, use higher metal layers
+- EM constraint: current density limit  
+- Example: w=0.6 μm, t=0.4 μm, I=2.5 mA, allowed 1 mA/μm²  
+- Area = 0.6 × 0.4 = 0.24 μm² → Current density = 2.5 / 0.24 ≈ 10.4 mA/μm² → exceeds limit  
+- Fix: widen trace, parallel wires, higher metal layers
 
 ---
 
 ## Cell Sizing, Buffers & ECO
 
-### Q20: Cell upsizing, buffers, spare cells, tie cells
+### Q20: Techniques to fix timing
 
-**Answer:**  
-- Upsizing: Reduce delay for setup paths  
-- Downsizing: Increase delay for hold paths  
-- Buffers: Adjust timing along paths  
-- Spare cells: Reserve for ECO without redesign  
-- Tie cells: Connect to VDD/VSS for density, no logical function
+- Upsize/downsize cells to adjust delays  
+- Buffer insertion to delay/drive paths  
+- Spare cells for post-PnR ECO  
+- Tie cells to VDD/VSS for density
 
 ---
 
 ### Q21: ECO definition
 
-**Answer:**  
 - Engineering Change Order  
 - Post-PnR fix of timing or functional issues  
 - Types: RTL-level, gate-level, metal-only
@@ -263,13 +262,54 @@ $$
 
 ### Q22: Crosstalk numeric example
 
-**Given:** Cc = 10 fF, Cv = 50 fF, VDD = 1 V  
+- $C_c = 10~\text{fF}$, $C_v = 50~\text{fF}$, $V_\text{DD} = 1~\text{V}$  
 
-**Answer:**  
 $$
-\Delta V = VDD \cdot \frac{C_c}{C_c + C_v} = 1 \cdot \frac{10}{60} \approx 0.167 \, \text{V}
+\Delta V = V_\text{DD} \cdot \frac{C_c}{C_c + C_v} = 1 \cdot \frac{10}{60} \approx 0.167~\text{V}
 $$  
 
 - Mitigation: spacing, shielding, routing layers, buffers
+
+---
+
+### Q23: Placement blockages and keepouts
+
+- Keepout moves with macro, blockage fixed  
+- Prevent routing/placement conflicts
+
+---
+
+### Q24: Floorplanning for PPA
+
+- Respect Performance, Power, Area  
+- Consider congestion, timing, density
+
+---
+
+### Q25: CTS with buffers
+
+- H-tree/A-tree with buffers  
+- Minimizes skew, preserves signal integrity
+
+---
+
+### Q26: Network latency
+
+- Clock delay along routing and buffers  
+- Source latency + network latency = total
+
+---
+
+### Q27: MMC corners in STA
+
+- Worst-case: slow process + low voltage + high temperature  
+- Best-case: fast process + high voltage + low temperature
+
+---
+
+### Q28: ECO example
+
+- Adding buffer to fix timing post-PnR  
+- Metal-only changes to adjust critical path delay
 
 ---
