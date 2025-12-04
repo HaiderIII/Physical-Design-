@@ -68,7 +68,7 @@ $$
 - **Setup:** Data must be stable before clock edge  
 
 $$
-T_\text{clk} \ge T_\text{CQ(max)} + D_\text{max} + T_\text{setup} + T_\text{skew}
+T_\text{clk} \ge T_\text{CQ(max)} + D_\text{max} + T_\text{setup} - T_\text{skew}
 $$
 
 - **Hold:** Data must be stable after clock edge  
