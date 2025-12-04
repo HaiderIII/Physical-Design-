@@ -62,7 +62,7 @@ Impact:
 - **Setup timing:** Data must be stable at the capture flip-flop before the clock edge.  
 
 $$
-T_\text{clk} \ge T_\text{CQ(max)} + D_\text{max} + T_\text{setup} + T_\text{skew}
+T_\text{clk} \ge T_\text{CQ(max)} + D_\text{max} + T_\text{setup} - T_\text{skew}
 $$
 
 - **Hold timing:** Data must remain stable at the capture flip-flop after the clock edge.  
