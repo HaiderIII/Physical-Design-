@@ -1,6 +1,6 @@
 # Junior Physical Design Interview Q&A
 
-A comprehensive reference for **junior-level physical design interviews**, with 28 questions, answers, and numeric examples.
+Comprehensive reference for **junior-level physical design interviews**, covering all major steps of Physical Design, with answers and numeric examples.
 
 ---
 
@@ -18,184 +18,131 @@ A comprehensive reference for **junior-level physical design interviews**, with 
 ## Floorplanning & Placement
 
 ### Q1: Core Utilization
-**Your answer:** Fraction of area occupied  
-**Assessment:** Correct  
-**Complete answer:**  
+**Answer:**  
 \[
 \text{Core Utilization} = \frac{\text{Occupied Area}}{\text{Total Core Area}} \times 100\%
 \]  
+Fraction of area occupied by standard cells, macros, or blockages.  
+
+---
 
 ### Q2: LEF, DEF, SDC
-**Your answer:** LEF = layout, DEF = PnR output, SDC = timing constraints  
-**Assessment:** Conceptually correct  
-**Complete answer:**  
-- LEF: cell dimensions, pins, routing layers  
-- DEF: placement/routing info  
-- SDC: timing constraints, clocks, exceptions  
+**Answer:**  
+- **LEF (Library Exchange Format):** Cell dimensions, pins, routing layers, geometric info  
+- **DEF (Design Exchange Format):** Placement/routing output from PnR  
+- **SDC (Synopsys Design Constraints):** Timing constraints, clocks, exceptions  
+
+---
 
 ### Q19: Placement / Routing Blockage
-**Your answer:** Hard vs soft  
-**Assessment:** Correct  
-**Complete answer:**  
-- Hard: forbids placement/routing  
-- Soft: limits density  
+**Answer:**  
+- **Hard blockage:** forbids placement or routing completely  
+- **Soft blockage:** partially allows placement/routing, e.g., fraction of density  
+
+---
 
 ### Q20: Keepout vs Blockage
-**Your answer:** Keepout moves with macro; blockage fixed  
-**Complete answer:** Keepout margin ~0.5 µm  
+**Answer:**  
+- **Keepout:** Prevents placement near a macro, moves with macro, typical margin 0.5 μm  
+- **Blockage:** Fixed, prevents routing independently of macro  
+
+---
+
+### Q21: Power / Ground Pins
+**Answer:**  
+- **VDD:** Supply voltage  
+- **VSS:** Ground  
+- **Data:** Logical signal  
+- **Clock:** Synchronizes FFs  
+
+---
 
 ### Q22: Congestion Mitigation
-**Your answer:** Blockages, macro grouping, split HFNs  
-**Complete answer:** Methods: define blockages, limit density, join macros, split HFNs, layer promotion  
+**Answer:**  
+- Define blockage area  
+- Limit density  
+- Group macros together  
+- Split HFNs (high-fanout nets)  
+- Layer promotion  
+Objective: avoid routing congestion, meet timing, preserve PPA (Performance, Power, Area)  
 
 ---
 
 ## Clock Tree Synthesis (CTS) & Timing
 
 ### Q3: Clock Skew
-**Your answer:** Difference of clock arrival  
-**Assessment:** Correct  
-**Complete answer:** Positive skew helps setup, may hurt hold; negative skew helps hold, may hurt setup  
+**Answer:**  
+- Difference in clock arrival at FFs  
+- **Positive skew:** helps setup, may hurt hold  
+- **Negative skew:** helps hold, may hurt setup  
+
+---
 
 ### Q4: Setup & Hold Inequalities
-**Your answer:** Tclk > Tcq + Tcombo + Tsetup - Tskew  
-**Complete answer:**  
+**Answer:**  
 \[
 \text{Setup: } T_{clk} \ge T_{CQ(max)} + D_{max} + T_{setup} + T_{skew}
 \]  
 \[
 \text{Hold: } T_{CQ(min)} + D_{min} \ge T_{hold} + T_{skew}
-\]
+\]  
+
+---
 
 ### Q5: Setup vs Hold
-**Your answer:** Setup violation → late; Hold violation → early  
-**Complete answer:** Fix with skew, upsizing/downsizing, buffers  
+**Answer:**  
+- **Setup violation:** Data arrives too late  
+- **Hold violation:** Data changes too early  
+**Fix:** Adjust skew, upsize/downsize cells, buffer insertion  
+
+---
 
 ### Q23: CTS / Clock Trees
-**Your answer:** H-tree spreads clock  
-**Complete answer:** H-tree / A-tree with buffers, minimal skew/latency  
+**Answer:**  
+- H-tree or A-tree distributes clock across the core  
+- Buffers injected to reduce skew and latency  
+- Objective: uniform clock arrival, minimal skew, minimal voltage drop  
+
+---
 
 ### Q24: Clock Latency
-**Your answer:** Source + network latency  
-**Complete answer:** Total = T_source + T_network  
+**Answer:**  
+- **Source latency:** Delay from clock source to launching FF  
+- **Network latency:** Delay along routing, buffers, cells  
 
-### Q18: Multi-Cycle Path
-**Your answer:** Wait several clocks  
-**Complete answer:** STA uses N*T_clk - T_setup  
+---
+
+### Q25: MMMC Corners
+**Answer:**  
+- **Purpose:** Test STA across different modes (timing modes) and corners (process/voltage/temp)  
+- **Example:** Worst-case voltage 0.9 V, 125°C  
+- **Setup:** slow process, low V, high T  
+- **Hold:** fast process, high V, low T  
 
 ---
 
 ## Static Timing Analysis (STA)
 
 ### Q15: STA Slack Computation
-**Your answer:** Setup slack = 80 ps, hold margin = 10 ps  
-**Complete answer:** Step-by-step calculation with formulas  
+**Given:**  
+T_CQ(max)=80 ps, D_max=420 ps, T_setup=90 ps, T_clk=700 ps, T_skew=30 ps  
+T_CQ(min)=25 ps, D_min=65 ps, T_hold=50 ps  
 
-### Q16: Skew Impact
-**Your answer:** Positive helps setup; negative helps hold  
-**Complete answer:** Example numeric computation with +20/-20 ps skew  
-
-### Q17: Setup Calculation Formula
-**Your answer:** Tclk + Tskew - Tsetup - (Tcq + D)  
-**Complete answer:** Formula aligns with industrial convention  
-
-### Q6: False Path
-**Your answer:** Branch never activated  
-**Complete answer:** Ignored in STA  
-
-### Q25: MMMC Corners
-**Your answer:** Worst-case: 0.9 V, 125°C  
-**Complete answer:** Setup: slow corner, Hold: fast corner  
-
-### Q14: Signal Integrity / Crosstalk
-**Your answer:** Current check; no violation  
-**Complete answer:** ΔV = VDD * Cc / (Cc + Cv); mitigation: spacing, shielding, routing layers  
-
-### Q28: Signal Integrity / Crosstalk Numeric
-**Your answer:** Not answered  
-**Complete answer:** ΔV = 1 * 10/60 ≈ 0.167 V  
-
----
-
-## Power, IR Drop & EM
-
-### Q10: Power Grid & IR Drop
-**Your answer:** VDD/VSS, vias, metal layers  
-**Complete answer:** Example Vdrop calculation; mitigation: wider rails, multiple vias  
-
-### Q11: Electromigration (EM)
-**Your answer:** EM constraints, antenna  
-**Complete answer:** Compute J = I/A, check against allowed current, widen trace if violation  
-
-### Q26: Electromigration Numeric
-**Your answer:** Not computed  
-**Complete answer:** Area = 0.24 µm², I = 2.5 mA → violation factor ~10  
-
-### Q21: Power / Ground Pins
-**Your answer:** VDD powers, VSS ground, data, clock  
-**Complete answer:** VDD/VSS supply, Data logical signal, Clock sync FFs  
-
----
-
-## Cell Sizing, Buffers & ECO
-
-### Q12: Cell Upsizing / Buffer / Spare Cells
-**Your answer:** Upsize, buffer, spare, physical-only  
-**Complete answer:** Detailed effects and timing numeric examples  
-
-### Q27: Cell Sizing / Buffers Numeric
-**Your answer:** Concept only  
-**Complete answer:** Arrival = 350, required = 340 → buffer pair fixes slack → minimum fix  
-
-### Q13: ECO
-**Your answer:** Post-PnR change  
-**Complete answer:** Types: RTL, gate-level, metal-only  
-
----
-
-## Signal Integrity & Crosstalk
-
-### Q14: Signal Integrity / Crosstalk
-**Your answer:** EM/antenna check  
-**Complete answer:** ΔV = 0.167 V, mitigation: spacing, shielding, routing  
-
-## Static Timing Analysis (STA) – Questions 15 à 22
-
-### Q15: STA Slack Computation
-**Question:** Compute setup and hold slack:  
-T_CQ(max) = 80 ps, D_max = 420 ps, T_setup = 90 ps, T_clk = 700 ps, T_skew = 30 ps  
-T_CQ(min) = 25 ps, D_min = 65 ps, T_hold = 50 ps  
-
-**Your answer:**  
-> Setup slack = 80 ps, Hold slack = 10 ps  
-
-**Assessment:** Correct conceptually  
-
-**Complete answer:**  
-- Setup: Required = 80 + 420 + 90 + 30 = 620 ps → Slack = 700 - 620 = 80 ps  
-- Hold: Min path = 25 + 65 = 90 ps ≥ 50 + 30 → satisfied, margin = 10 ps  
+**Answer:**  
+- **Setup required period:** 80+420+90+30 = 620 ps → Slack = 700-620 = 80 ps  
+- **Hold margin:** 25+65 = 90 ≥ 50+30 → margin = 10 ps  
 
 ---
 
 ### Q16: Skew Impact
-**Question:** How does skew affect setup and hold?  
-
-**Your answer:**  
-> Positive skew helps setup; negative skew helps hold  
-
-**Complete answer:**  
-- Positive skew +20 ps → setup slack = 90 ps, hold satisfied  
-- Negative skew -20 ps → setup slack = 50 ps, hold satisfied  
+**Answer:**  
+- +20 ps skew: setup slack = 90 ps, hold satisfied  
+- -20 ps skew: setup slack = 50 ps, hold satisfied  
 
 ---
 
 ### Q17: Setup Calculation Formula
-**Question:** Write setup slack formula using industrial convention  
-
-**Your answer:**  
-> Slack = T_clk + T_skew - T_setup - (T_CQ + D_max)  
-
-**Complete answer:**  
+**Answer:**  
 \[
 \text{Setup Slack} = T_{clk} + T_{skew} - T_{setup} - (T_{CQ(max)} + D_{max})
 \]  
@@ -203,146 +150,60 @@ T_CQ(min) = 25 ps, D_min = 65 ps, T_hold = 50 ps
 ---
 
 ### Q18: Multi-Cycle Path
-**Question:** How to handle data paths longer than one clock?  
-
-**Your answer:**  
-> Wait several clocks; specify multi-cycle constraint  
-
-**Complete answer:**  
-- STA computes required arrival = N*T_clk - T_setup  
-- Slack = required - actual arrival  
+**Answer:**  
+- Required arrival = N*T_clk - T_setup  
+- Used when combinational path is longer than one clock period  
 
 ---
 
-### Q19: Placement / Routing Blockage
-**Question:** Define hard and soft blockage  
-
-**Your answer:**  
-> Hard = forbids completely, soft = partially allows  
-
-**Complete answer:**  
-- Hard: no placement/routing allowed  
-- Soft: limits placement density or allows fraction of placement  
+### Q6: False Path
+**Answer:**  
+- Path that never activates in real operation  
+- Ignored in STA to avoid unnecessary timing pessimism  
 
 ---
 
-### Q20: Keepout vs Blockage
-**Question:** Difference between keepout and blockage  
-
-**Your answer:**  
-> Keepout moves with macro; blockage independent  
-
-**Complete answer:**  
-- Keepout: prevents placement around macro, moves with it, typical margin 0.5 μm  
-- Blockage: fixed location, prevents routing  
-
----
-
-### Q21: Power / Ground Pins
-**Question:** What are VDD, VSS, data, and clock pins?  
-
-**Your answer:**  
-> VDD powers cells; VSS ground; data transfers info; clock synchronizes  
-
-**Complete answer:**  
-- VDD: supply voltage  
-- VSS: ground  
-- Data: logical signal between cells  
-- Clock: synchronizes FFs  
-
----
-
-### Q22: Congestion Mitigation
-**Question:** How to reduce routing congestion?  
-
-**Your answer:**  
-> Define blockage area, limit density, join macros, layer promotion  
-
-**Complete answer:**  
-- Methods: define blockages, limit density, group macros, split HFNs, layer promotion  
-- Objective: avoid routing hotspots, meet timing  
-
----
-
-## Clock Tree Synthesis & Timing – Questions 23 à 25
-
-### Q23: CTS / Clock Trees
-**Question:** Define CTS, H-tree, and objectives  
-
-**Your answer:**  
-> Clock tree spreads clock efficiently, limits latency and skew  
-
-**Complete answer:**  
-- H-tree or A-tree distributes clock across core  
-- Buffers inserted to reduce skew and latency  
-- Objective: minimal skew, uniform clock, low voltage drop  
-
----
-
-### Q24: Clock Latency
-**Question:** Difference between source latency and network latency  
-
-**Your answer:**  
-> Source: input to launch FF, Network: route/cells/buffers  
-
-**Complete answer:**  
-- Source latency: delay from clock source to launching FF  
-- Network latency: routing and buffers along the tree  
-
----
-
-### Q25: MMMC Corners
-**Question:** Why use Multi-Mode Multi-Corner (MMMC) STA?  
-
-**Your answer:**  
-> Tests STA under different process/voltage/temp; worst-case 0.9 V, 125°C  
-
-**Complete answer:**  
-- Setup: slow process, low V, high T  
-- Hold: fast process, high V, low T  
-- STA ensures timing is met in all modes and corners  
-
----
-
-## Power, EM, and Signal Integrity – Questions 26 à 28
-
-### Q26: Electromigration Numeric
-**Question:** Compute if trace is safe: w = 0.6 μm, t = 0.4 μm, I = 2.5 mA, allowed 1 mA/μm²  
-
-**Your answer:**  
-> Not violation EM limits  
-
-**Assessment:** Incorrect; must compute density  
-
-**Complete answer:**  
-- Area = 0.6*0.4 = 0.24 μm²  
-- Current density = 2.5 / 0.24 ≈ 10.4 mA/μm² → violation  
-- Fix: widen trace, parallel tracks, higher metal layer  
-
----
-
-### Q27: Cell Sizing / Buffers Numeric
-**Question:** Timing fix: T_CQ=50, D=300, T_setup=80, T_clk=420, T_skew=0. Upsize reduces D by 8 ps; buffer pair reduces 15 ps D, adds 5 ps delay  
-
-**Your answer:** Conceptual only  
-
-**Complete answer:**  
-- Arrival = 350, required = 340 → slack = -10 ps  
-- One buffer pair: reduces D → slack = 0 → timing met  
-- Two upsizes: slack = +6 ps → minimal fix = one buffer pair  
-
----
-
-### Q28: Signal Integrity / Crosstalk Numeric
-**Question:** Compute ΔV for victim: Cc=10 fF, Cv=50 fF, VDD=1 V  
-
-**Your answer:** Not answered  
-
-**Complete answer:**  
-\[
-\Delta V = V_{DD} \cdot \frac{C_c}{C_c + C_v} = 1 \cdot \frac{10}{60} \approx 0.167 \text{ V}
-\]  
+### Q14: Signal Integrity / Crosstalk
+**Answer:**  
+- Crosstalk voltage: \(\Delta V = V_{DD} \cdot \frac{C_c}{C_c + C_v}\)  
 - Mitigation: spacing, shielding, routing layers, buffers  
 
 ---
 
+## Cell Sizing, Buffers & ECO
+
+### Q12: Cell Upsizing / Buffer / Spare Cells
+**Answer:**  
+- **Upsizing / Downsizing:** Adjust transistor width to meet timing  
+- **Buffer insertion:** Improve signal propagation, meet setup/hold  
+- **Spare cells:** Reserve for ECO/fixes without restarting flow  
+- **Tie cells:** Tie to VDD/VSS for power/density, no logical function  
+
+---
+
+### Q13: ECO
+**Answer:**  
+- Engineering Change Order  
+- Post-PnR modification of design  
+- Types: RTL-level, gate-level, metal-only  
+
+### Q26: Electromigration Numeric
+**Given:** w=0.6 μm, t=0.4 μm, I=2.5 mA, allowed 1 mA/μm²  
+**Answer:**  
+- Area = 0.6*0.4=0.24 μm²  
+- Current density = 2.5/0.24 ≈ 10.4 mA/μm² → exceeds limit → violation  
+- Fix: widen trace, parallel tracks, higher metal layer  
+
+### Q27: Cell Sizing / Buffers Numeric
+**Given:** T_CQ=50, D=300, T_setup=80, T_clk=420, T_skew=0; buffer reduces 15 ps, adds 5 ps delay  
+**Answer:**  
+- Arrival = 350, required = 340 → slack = -10 ps  
+- One buffer pair → slack = 0 → timing met  
+
+### Q28: Signal Integrity / Crosstalk Numeric
+**Given:** Cc=10 fF, Cv=50 fF, VDD=1 V  
+**Answer:**  
+\(\Delta V = VDD \cdot \frac{C_c}{C_c + C_v} = 1 * 10/60 ≈ 0.167 V\)  
+- Mitigation: spacing, shielding, routing layers, buffers  
+
+---
