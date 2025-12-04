@@ -150,13 +150,13 @@ $$
 - Setup required period:  
 
 $$
-T_\text{clk,min} = T_\text{CQ(max)} + D_\text{max} + T_\text{setup} + T_\text{skew} = 80 + 420 + 90 + 30 = 620~\text{ps}
+T_\text{clk,min} = T_\text{CQ(max)} + D_\text{max} + T_\text{setup} - T_\text{skew} = 80 + 420 + 90 - 30 = 560~\text{ps}
 $$
 
 - Setup slack:  
 
 $$
-\text{Slack} = T_\text{clk} - T_\text{clk,min} = 700 - 620 = 80~\text{ps}
+\text{Slack} = T_\text{clk} - T_\text{clk,min} = 700 - 560 = 140~\text{ps}
 $$
 
 - Hold margin:  
