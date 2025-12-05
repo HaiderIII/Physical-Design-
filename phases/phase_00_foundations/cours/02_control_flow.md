@@ -1196,57 +1196,73 @@ Expected output:
 
 ### Exercise 3: Timing Path Analyzer ⏱️
 
-Analyze timing paths and find violations:
+Analyze timing path:
 
-    set paths {
-        {clk2q 0.5}
-        {comb1 2.3}
-        {comb2 1.8}
-        {setup -0.3}
-    }
-    
     set clock_period 5.0
-    set total_delay 0.0
+    set clk2q_delay 0.5
+    set comb1_delay 2.3
+    set comb2_delay 1.8
+    set setup_time 0.3
     
-    puts "Timing Path Analysis"
-    puts "Clock Period: $clock_period ns"
+    # TODO: Calculate arrival time
+    set arrival_time [expr {$clk2q_delay + $comb1_delay + $comb2_delay}]
+    
+    # TODO: Calculate required time
+    set required_time [expr {$clock_period - $setup_time}]
+    
+    # TODO: Calculate slack
+    set slack [expr {$required_time - $arrival_time}]
+    
+    # TODO: Print timing report
+    puts "=================================="
+    puts "    TIMING PATH ANALYSIS"
+    puts "=================================="
+    puts "Clock Period:    $clock_period ns"
     puts ""
-    
-    foreach segment $paths {
-        set name [lindex $segment 0]
-        set delay [lindex $segment 1]
-        set total_delay [expr {$total_delay + $delay}]
-        puts "  $name: [format %5.2f $delay] ns"
-    }
-    
-    puts [string repeat "-" 25]
-    puts "  Total: [format %5.2f $total_delay] ns"
-    
-    set slack [expr {$clock_period - $total_delay}]
+    puts "Path Delays:"
+    puts "  clk2q:        $clk2q_delay ns"
+    puts "  comb1:        $comb1_delay ns"
+    puts "  comb2:        $comb2_delay ns"
+    puts "--------------------------------"
+    puts "Arrival Time:    $arrival_time ns"
     puts ""
-    puts "Slack: [format %.2f $slack] ns"
-    
+    puts "Required Time:   $required_time ns"
+    puts "  (Period - Setup: $clock_period - $setup_time)"
+    puts ""
+    puts "Slack:           $slack ns"
     if {$slack >= 0} {
-        puts "Timing constraint MET"
+        puts "Status:          PASS"
     } else {
-        puts "Timing constraint VIOLATED"
-        puts "Need to improve by [format %.2f [expr {abs($slack)}]] ns"
+        puts "Status:          FAIL (VIOLATION)"
     }
+    puts "=================================="
 
 Expected output:
 
-    Timing Path Analysis
-    Clock Period: 5.0 ns
+    ==================================
+        TIMING PATH ANALYSIS
+    ==================================
+    Clock Period:    5.0 ns
     
-      clk2q:  0.50 ns
-      comb1:  2.30 ns
-      comb2:  1.80 ns
-      setup: -0.30 ns
-    -------------------------
-      Total:  4.30 ns
+    Path Delays:
+      clk2q:        0.5 ns
+      comb1:        2.3 ns
+      comb2:        1.8 ns
+    --------------------------------
+    Arrival Time:    4.6 ns
     
-    Slack: 0.70 ns
-    Timing constraint MET
+    Required Time:   4.7 ns
+      (Period - Setup: 5.0 - 0.3)
+    
+    Slack:           0.1 ns
+    Status:          PASS
+    ==================================
+
+Logic explanation:
+- Arrival Time = sum of all delays from clock to data input
+- Required Time = clock period minus setup time
+- Slack = how much margin we have (positive = good)
+
 
 ### Exercise 4: Power Domain Iterator 🔋
 
