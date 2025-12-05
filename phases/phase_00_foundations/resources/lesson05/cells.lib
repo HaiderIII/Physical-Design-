@@ -1,0 +1,37 @@
+library(sample_lib) {
+    cell(INV_X1) {
+        area : 2.5;
+        pin(A) {
+            direction : input;
+            capacitance : 0.01;
+        }
+        pin(Y) {
+            direction : output;
+            timing() {
+                related_pin : "A";
+                cell_rise : 0.05;
+                cell_fall : 0.04;
+            }
+        }
+    }
+    
+    cell(NAND2_X1) {
+        area : 4.0;
+        pin(A) {
+            direction : input;
+            capacitance : 0.01;
+        }
+        pin(B) {
+            direction : input;
+            capacitance : 0.01;
+        }
+        pin(Y) {
+            direction : output;
+            timing() {
+                related_pin : "A";
+                cell_rise : 0.08;
+                cell_fall : 0.07;
+            }
+        }
+    }
+}

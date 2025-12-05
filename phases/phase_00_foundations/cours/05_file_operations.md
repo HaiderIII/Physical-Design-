@@ -964,3 +964,34 @@ Complete the exercises above first, then move to:
 
 Good luck with your practice! 💪
 
+
+---
+
+## 📁 Exercise Resources
+
+All files needed for exercises are located in:
+
+    phases/phase_00_foundations/resources/lesson05/
+
+Available files:
+
+| File | Purpose | Used in Exercise |
+|------|---------|------------------|
+| data.txt | Simple text file | Ex1 |
+| text.txt | Word frequency test | Ex2 |
+| design.v | Verilog module | Ex1, Ex5 |
+| netlist.v | Netlist for editing | Ex3 |
+| config.txt | Simple config | - |
+| setup.cfg | Config with comments | Ex6 |
+| constraints.sdc | SDC file | - |
+| cells.lib | Liberty file | - |
+| cells.csv | CSV data | Ex8 |
+| synthesis.log | Log file | Ex7 |
+| module1.v | Module for merge | Ex4 |
+| module2.v | Module for merge | Ex4 |
+| module3.v | Module for merge | Ex4 |
+
+To start exercises, navigate to:
+
+    cd ~/projects/Physical-Design/phases/phase_00_foundations/exercises
+

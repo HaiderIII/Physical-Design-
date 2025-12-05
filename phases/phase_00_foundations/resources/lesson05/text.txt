@@ -1,0 +1,6 @@
+module test module
+input clk input rst
+output data output
+wire signal wire
+module design module
+input enable

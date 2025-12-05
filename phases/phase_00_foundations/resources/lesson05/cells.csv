@@ -1,0 +1,6 @@
+cell_name,area,delay
+INV_X1,2.5,0.05
+NAND2_X1,4.0,0.08
+NOR2_X1,4.2,0.09
+BUF_X2,3.0,0.03
+AND2_X1,4.5,0.10

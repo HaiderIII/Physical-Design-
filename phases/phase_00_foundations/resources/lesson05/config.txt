@@ -1,0 +1,5 @@
+clock_period 10.0
+input_delay 0.5
+output_delay 0.3
+hold_margin 0.1
+setup_margin 0.2
