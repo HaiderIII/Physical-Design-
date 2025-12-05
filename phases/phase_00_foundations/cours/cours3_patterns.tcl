@@ -91,7 +91,7 @@ proc get_children {module} {
 walk_hierarchy "TOP"  0
 
 
-puts "\n####### Pattern 4: Statistics Collector ########\n"
+puts "\n####### Pattern 4 ########\n"
 
 proc analyze_cell_distribution {cells} {
     array set stats {}
