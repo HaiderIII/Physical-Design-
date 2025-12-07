@@ -1,0 +1,7 @@
+data_in[7:0]
+addr[15:0]
+ctrl[3:0]
+status[1:0]
+result[31:0]
+instruction[31:0]
+reg_data[63:0]

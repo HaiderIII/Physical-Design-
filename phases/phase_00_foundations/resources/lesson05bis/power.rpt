@@ -1,0 +1,82 @@
+Power Analysis Report
+=====================
+Design: top
+Corner: typical
+Voltage: 1.0V
+Temperature: 25C
+
+Global Power Summary
+--------------------
+Total Power: 278.5 mW
+
+Power Breakdown by Type
+-----------------------
+Dynamic Power:   125.5 mW  (45.1%)
+Leakage Power:    85.3 mW  (30.6%)
+Static Power:     67.7 mW  (24.3%)
+
+Power by Hierarchy
+------------------
+Instance                Power(mW)   Type        Percentage
+============================================================
+top                      278.5      total       100.0%
+  cpu_core               156.8      dynamic      56.3%
+    U_ALU                 45.2      dynamic      16.2%
+    U_REGS                68.5      dynamic      24.6%
+  memory_ctrl            85.3       leakage      30.6%
+  io_block               36.4       static       13.1%
+
+Power by Cell Type
+------------------
+Cell Type       Count   Power/cell(uW)   Total(mW)   Percentage
+================================================================
+NAND2_X1          145        125.3          18.17       6.5%
+INV_X1             89         85.7           7.63       2.7%
+DFFR_X1            32        215.8           6.91       2.5%
+NOR2_X1            67        132.5           8.88       3.2%
+BUF_X1             23         95.2           2.19       0.8%
+BUF_X2             15        125.8           1.89       0.7%
+BUF_X4              8        185.5           1.48       0.5%
+XOR2_X1            12        165.3           1.98       0.7%
+SDFFRS_X1           5        285.7           1.43       0.5%
+
+High Power Instances (> 1.0 mW)
+--------------------------------
+Instance              Power(mW)   Cell Type      Hierarchy
+==========================================================
+cpu_core/U_ALU          45.2      module         top/cpu_core/U_ALU
+cpu_core/U_REGS         68.5      module         top/cpu_core/U_REGS
+memory_ctrl             85.3      module         top/memory_ctrl
+io_block                36.4      module         top/io_block
+
+Switching Activity
+------------------
+Net                   Toggle(MHz)   Power(uW)
+==============================================
+clk                      100.0        2500
+data_in[0]                45.2         125
+data_in[1]                42.8         118
+internal_clk              98.5        2350
+
+Leakage Analysis
+----------------
+Total Leakage: 85.3 mW
+
+By Cell Type:
+  DFFR_X1:     6.91 mW (8.1%)
+  SDFFRS_X1:   1.43 mW (1.7%)
+  NAND2_X1:   18.17 mW (21.3%)
+  Others:     58.79 mW (68.9%)
+
+Clock Network Power
+-------------------
+Clock: clk
+  Buffer Power:     12.5 mW
+  Register Power:    8.3 mW
+  Total:            20.8 mW (7.5% of total)
+
+Recommendations
+---------------
+[WARNING] : High switching activity on net clk (100.0 MHz)
+[WARNING] : Consider clock gating for cpu_core (68.5 mW)
+[INFO]    : Leakage within acceptable limits

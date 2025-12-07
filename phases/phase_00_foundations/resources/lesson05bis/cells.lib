@@ -1,0 +1,238 @@
+/* Liberty file example */
+library(sample_lib) {
+    delay_model : table_lookup;
+    time_unit : "1ns";
+    voltage_unit : "1V";
+    current_unit : "1mA";
+    capacitive_load_unit(1, pf);
+    leakage_power_unit : "1nW";
+    
+    cell(NAND2_X1) {
+        area : 4.5;
+        cell_leakage_power : 125.3;
+        
+        pin(A) {
+            direction : input;
+            capacitance : 0.01;
+        }
+        
+        pin(B) {
+            direction : input;
+            capacitance : 0.01;
+        }
+        
+        pin(Y) {
+            direction : output;
+            capacitance : 0.00;
+            function : "!(A & B)";
+            
+            timing() {
+                related_pin : "A";
+                timing_sense : negative_unate;
+                cell_rise(delay_template_5x5) {
+                    values("0.05, 0.06, 0.07, 0.08, 0.09");
+                }
+                cell_fall(delay_template_5x5) {
+                    values("0.04, 0.05, 0.06, 0.07, 0.08");
+                }
+            }
+            
+            timing() {
+                related_pin : "B";
+                timing_sense : negative_unate;
+                cell_rise(delay_template_5x5) {
+                    values("0.05, 0.06, 0.07, 0.08, 0.09");
+                }
+                cell_fall(delay_template_5x5) {
+                    values("0.04, 0.05, 0.06, 0.07, 0.08");
+                }
+            }
+        }
+    }
+    
+    cell(INV_X1) {
+        area : 2.5;
+        cell_leakage_power : 85.7;
+        
+        pin(A) {
+            direction : input;
+            capacitance : 0.01;
+        }
+        
+        pin(Y) {
+            direction : output;
+            capacitance : 0.00;
+            function : "!A";
+            
+            timing() {
+                related_pin : "A";
+                timing_sense : negative_unate;
+                cell_rise(delay_template_5x5) {
+                    values("0.03, 0.04, 0.05, 0.06, 0.07");
+                }
+                cell_fall(delay_template_5x5) {
+                    values("0.02, 0.03, 0.04, 0.05, 0.06");
+                }
+            }
+        }
+    }
+    
+    cell(DFFR_X1) {
+        area : 8.2;
+        cell_leakage_power : 215.8;
+        ff(IQ, IQN) {
+            next_state : "D";
+            clocked_on : "CK";
+            clear : "!RN";
+        }
+        
+        pin(D) {
+            direction : input;
+            capacitance : 0.012;
+        }
+        
+        pin(CK) {
+            direction : input;
+            capacitance : 0.015;
+            clock : true;
+        }
+        
+        pin(RN) {
+            direction : input;
+            capacitance : 0.008;
+        }
+        
+        pin(Q) {
+            direction : output;
+            capacitance : 0.00;
+            function : "IQ";
+            
+            timing() {
+                related_pin : "CK";
+                timing_type : rising_edge;
+                cell_rise(delay_template_5x5) {
+                    values("0.10, 0.12, 0.14, 0.16, 0.18");
+                }
+                cell_fall(delay_template_5x5) {
+                    values("0.09, 0.11, 0.13, 0.15, 0.17");
+                }
+            }
+        }
+    }
+    
+    cell(NOR2_X1) {
+        area : 4.8;
+        cell_leakage_power : 132.5;
+        
+        pin(A) {
+            direction : input;
+            capacitance : 0.011;
+        }
+        
+        pin(B) {
+            direction : input;
+            capacitance : 0.011;
+        }
+        
+        pin(Y) {
+            direction : output;
+            function : "!(A | B)";
+        }
+    }
+    
+    cell(BUF_X1) {
+        area : 3.2;
+        cell_leakage_power : 95.2;
+        
+        pin(A) {
+            direction : input;
+            capacitance : 0.009;
+        }
+        
+        pin(Y) {
+            direction : output;
+            function : "A";
+        }
+    }
+    
+    cell(BUF_X2) {
+        area : 4.1;
+        cell_leakage_power : 125.8;
+        
+        pin(A) {
+            direction : input;
+            capacitance : 0.012;
+        }
+        
+        pin(Y) {
+            direction : output;
+            function : "A";
+        }
+    }
+    
+    cell(BUF_X4) {
+        area : 5.8;
+        cell_leakage_power : 185.5;
+        
+        pin(A) {
+            direction : input;
+            capacitance : 0.018;
+        }
+        
+        pin(Y) {
+            direction : output;
+            function : "A";
+        }
+    }
+    
+    cell(XOR2_X1) {
+        area : 6.5;
+        cell_leakage_power : 165.3;
+        
+        pin(A) {
+            direction : input;
+            capacitance : 0.013;
+        }
+        
+        pin(B) {
+            direction : input;
+            capacitance : 0.013;
+        }
+        
+        pin(Y) {
+            direction : output;
+            function : "(A ^ B)";
+        }
+    }
+    
+    cell(SDFFRS_X1) {
+        area : 12.5;
+        cell_leakage_power : 285.7;
+        
+        pin(D) {
+            direction : input;
+            capacitance : 0.014;
+        }
+        
+        pin(CK) {
+            direction : input;
+            capacitance : 0.016;
+            clock : true;
+        }
+        
+        pin(RN) {
+            direction : input;
+            capacitance : 0.009;
+        }
+        
+        pin(SN) {
+            direction : input;
+            capacitance : 0.009;
+        }
+        
+        pin(Q) {
+            direction : output;
+            capacitance : 0.00;
+        }
+    }
+}

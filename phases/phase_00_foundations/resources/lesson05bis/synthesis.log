@@ -1,0 +1,43 @@
+Synthesis Started: 2024-01-15 10:30:45
+Design: top
+Technology: sample_lib
+
+[INFO] : Reading RTL files
+[INFO] : Parsing design.v
+[INFO] : Found 3 modules
+[INFO] : Elaborating design 'top'
+
+Module Statistics:
+  counter    : 1 instance
+  and_gate   : 2 instances
+  adder      : 1 instance
+
+[INFO] : Starting synthesis
+[INFO] : Mapping to technology library
+
+Cell Usage:
+  NAND2_X1   : 145 instances
+  INV_X1     : 89 instances
+  DFFR_X1    : 32 instances
+  NOR2_X1    : 67 instances
+  BUF_X1     : 23 instances
+  XOR2_X1    : 12 instances
+
+[WARNING] : High fanout detected on net 'clk' (fanout = 150)
+[WARNING] : Unconnected output port 'unused_out' on module 'adder'
+[INFO] : Inserted 45 buffers for load balancing
+
+Area Report:
+  Total cell area: 1245.8 um^2
+  Net area:         187.3 um^2
+  Total area:      1433.1 um^2
+
+[INFO] : Synthesis completed successfully
+[INFO] : Writing netlist to netlist.v
+[INFO] : Writing constraints to constraints.sdc
+
+Synthesis Completed: 2024-01-15 10:35:22
+Elapsed Time: 4 minutes 37 seconds
+
+Warnings: 2
+Errors: 0

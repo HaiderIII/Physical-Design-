@@ -1,0 +1,148 @@
+Timing Analysis Report
+======================
+Design: top
+Version: 1.0
+Date: 2024
+
+Clock Summary
+-------------
+clk: period = 10.0 ns
+
+Path Group: clk
+---------------
+
+Path 1: Setup analysis
+  Startpoint: FF_0/CK (rising edge-triggered flip-flop)
+  Endpoint: FF_1/D (rising edge-triggered flip-flop)
+  Path Type: max
+  
+  Point                          Incr      Path
+  ------------------------------------------------
+  clock clk (rise edge)          0.00      0.00
+  clock network delay            0.10      0.10
+  FF_0/CK (DFFR_X1)              0.00      0.10 r
+  FF_0/Q (DFFR_X1)               0.12      0.22 r
+  U1/A (NAND2_X1)                0.00      0.22 r
+  U1/Y (NAND2_X1)                0.05      0.27 f
+  U3/A (INV_X1)                  0.00      0.27 f
+  U3/Y (INV_X1)                  0.03      0.30 r
+  U5/A (NOR2_X1)                 0.00      0.30 r
+  U5/Y (NOR2_X1)                 0.06      0.36 f
+  FF_1/D (DFFR_X1)               0.00      0.36 f
+  data arrival time                        0.36
+  
+  clock clk (rise edge)          10.00     10.00
+  clock network delay            0.10      10.10
+  FF_1/CK (DFFR_X1)              0.00      10.10 r
+  library setup time             -0.05     10.05
+  data required time                       10.05
+  ------------------------------------------------
+  slack (MET)                               9.69
+
+
+Path 2: Setup analysis (VIOLATED)
+  Startpoint: FF_2/CK
+  Endpoint: FF_3/D
+  Path Type: max
+  
+  Point                          Incr      Path
+  ------------------------------------------------
+  clock clk (rise edge)          0.00      0.00
+  clock network delay            0.15      0.15
+  FF_2/CK (DFFR_X1)              0.00      0.15 r
+  FF_2/Q (DFFR_X1)               0.14      0.29 r
+  U6/A (NAND2_X1)                0.00      0.29 r
+  U6/Y (NAND2_X1)                0.06      0.35 f
+  U7/A (NAND2_X1)                0.00      0.35 f
+  U7/Y (NAND2_X1)                0.07      0.42 r
+  U9/A (NOR2_X1)                 0.00      0.42 r
+  U9/Y (NOR2_X1)                 0.08      0.50 f
+  U10/A (BUF_X1)                 0.00      0.50 f
+  U10/Y (BUF_X1)                 0.04      0.54 f
+  U11/A (BUF_X2)                 0.00      0.54 f
+  U11/Y (BUF_X2)                 0.05      0.59 f
+  U12/A (BUF_X4)                 0.00      0.59 f
+  U12/Y (BUF_X4)                 0.06      0.65 f
+  U13/A (XOR2_X1)                0.00      0.65 f
+  U13/Y (XOR2_X1)                0.09      0.74 f
+  U2/A (NAND2_X1)                0.00      0.74 f
+  U2/Y (NAND2_X1)                0.08      0.82 r
+  U4/A (INV_X1)                  0.00      0.82 r
+  U4/Y (INV_X1)                  0.04      0.86 f
+  U8/A (INV_X1)                  0.00      0.86 f
+  U8/Y (INV_X1)                  0.05      0.91 r
+  FF_3/D (DFFR_X1)               0.00      0.91 r
+  data arrival time                        0.91
+  
+  clock clk (rise edge)          10.00     10.00
+  clock network delay            0.12      10.12
+  FF_3/CK (DFFR_X1)              0.00      10.12 r
+  library setup time             -0.05     10.07
+  data required time                       10.07
+  ------------------------------------------------
+  slack (VIOLATED)                         -0.125
+
+
+Path 3: Hold analysis
+  Startpoint: FF_0/CK
+  Endpoint: FF_1/D
+  Path Type: min
+  
+  Point                          Incr      Path
+  ------------------------------------------------
+  clock clk (rise edge)          0.00      0.00
+  clock network delay            0.10      0.10
+  FF_0/CK (DFFR_X1)              0.00      0.10 r
+  FF_0/Q (DFFR_X1)               0.09      0.19 r
+  U1/A (NAND2_X1)                0.00      0.19 r
+  U1/Y (NAND2_X1)                0.03      0.22 f
+  FF_1/D (DFFR_X1)               0.00      0.22 f
+  data arrival time                        0.22
+  
+  clock clk (rise edge)          0.00      0.00
+  clock network delay            0.10      0.10
+  FF_1/CK (DFFR_X1)              0.00      0.10 r
+  library hold time              0.02      0.12
+  data required time                       0.12
+  ------------------------------------------------
+  slack (MET)                               0.10
+
+
+Path 4: Setup analysis
+  Startpoint: data_in[0]
+  Endpoint: FF_STATE/D
+  Path Type: max
+  
+  Point                          Incr      Path
+  ------------------------------------------------
+  clock clk (rise edge)          0.00      0.00
+  input external delay           0.50      0.50 r
+  data_in[0] (in)                0.00      0.50 r
+  U1/A (NAND2_X1)                0.00      0.50 r
+  U1/Y (NAND2_X1)                0.05      0.55 f
+  U3/A (INV_X1)                  0.00      0.55 f
+  U3/Y (INV_X1)                  0.03      0.58 r
+  FF_STATE/D (SDFFRS_X1)         0.00      0.58 r
+  data arrival time                        0.58
+  
+  clock clk (rise edge)          10.00     10.00
+  clock network delay            0.11      10.11
+  FF_STATE/CK (SDFFRS_X1)        0.00      10.11 r
+  library setup time             -0.06     10.05
+  data required time                       10.05
+  ------------------------------------------------
+  slack (MET)                               9.47
+
+
+Summary
+-------
+Total paths: 47
+Setup violations: 3
+Hold violations: 0
+
+Critical paths (slack < 0.1):
+  Path  2: slack = -0.125 ns (SETUP)
+  Path 15: slack = -0.087 ns (SETUP)
+  Path 24: slack = -0.050 ns (SETUP)
+  Path 31: slack =  0.025 ns (SETUP)
+  Path 38: slack =  0.075 ns (SETUP)

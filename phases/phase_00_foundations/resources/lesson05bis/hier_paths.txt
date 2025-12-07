@@ -1,0 +1,10 @@
+top/cpu_core/alu/adder/FA_0/U1
+top/cpu_core/alu/adder/FA_0/U2
+top/cpu_core/alu/adder/FA_1/U1
+top/cpu_core/alu/multiplier/MULT_0/U3
+top/cpu_core/reg_file/REG_0/FF_D0
+top/cpu_core/reg_file/REG_0/FF_D1
+top/cpu_core/reg_file/REG_1/FF_D0
+top/memory_ctrl/decoder/DEC_0/U1
+top/memory_ctrl/arbiter/ARB_FSM/STATE_REG
+top/io_block/pad_driver/DRV_0/BUF_CHAIN
