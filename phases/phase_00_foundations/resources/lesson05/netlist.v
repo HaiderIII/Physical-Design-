@@ -1,5 +1,5 @@
 module top (
-    input clk,
+    input clk_new_new_new_new_new_new_new_new_new_new_new_new_new_new_new,
     input rst,
     input [7:0] data_in,
     output [7:0] data_out
