@@ -1,0 +1,5 @@
+create_clock -name clk -period 10.0 [get_ports clk]
+set_input_delay -clock clk 2.0 [get_ports A]
+set_output_delay -clock clk 2.0 [get_ports Y]
+set_driving_cell -lib_cell BUF_X1 [get_ports A]
+set_load 0.05 [get_ports Y]

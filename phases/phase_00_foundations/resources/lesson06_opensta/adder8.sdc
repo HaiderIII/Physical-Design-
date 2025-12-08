@@ -1,0 +1,8 @@
+create_clock -name clk -period 5.0 [get_ports clk]
+set_input_delay -clock clk 1.5 [get_ports {a* b* cin}]
+set_output_delay -clock clk 1.0 [get_ports {sum* cout}]
+group_path -name INPUTS -from [all_inputs]
+group_path -name OUTPUTS -to [all_outputs]
+group_path -name COMBO -from [all_inputs] -to [all_outputs]
+set_max_transition 0.5 [current_design]
+set_max_capacitance 0.2 [current_design]
