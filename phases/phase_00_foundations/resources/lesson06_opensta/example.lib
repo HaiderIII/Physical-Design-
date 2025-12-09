@@ -1,0 +1,171 @@
+/* Example Liberty Library for OpenSTA */
+library (example) {
+  delay_model : table_lookup;
+  time_unit : "1ns";
+  voltage_unit : "1V";
+  current_unit : "1mA";
+  pulling_resistance_unit : "1kohm";
+  capacitive_load_unit (1, pf);
+  
+  /* Threshold definitions (required by OpenSTA) */
+  slew_lower_threshold_pct_rise : 20.0;
+  slew_upper_threshold_pct_rise : 80.0;
+  slew_lower_threshold_pct_fall : 20.0;
+  slew_upper_threshold_pct_fall : 80.0;
+  input_threshold_pct_rise : 50.0;
+  output_threshold_pct_rise : 50.0;
+  input_threshold_pct_fall : 50.0;
+  output_threshold_pct_fall : 50.0;
+  
+  default_operating_conditions : typical;
+  operating_conditions (typical) {
+    voltage : 1.8;
+    temperature : 25;
+  }
+
+  /* ========================================
+     INVERTER (INV)
+     ======================================== */
+  cell (INV) {
+    area : 1.0;
+    pin (A) {
+      direction : input;
+      capacitance : 0.005;
+    }
+    pin (Y) {
+      direction : output;
+      function : "(!A)";
+      max_capacitance : 0.5;
+      timing () {
+        related_pin : "A";
+        timing_sense : negative_unate;
+        cell_rise (scalar) {
+          values ("0.05");
+        }
+        cell_fall (scalar) {
+          values ("0.04");
+        }
+        rise_transition (scalar) {
+          values ("0.03");
+        }
+        fall_transition (scalar) {
+          values ("0.03");
+        }
+      }
+    }
+  }
+
+  /* ========================================
+     2-INPUT AND GATE (AND2)
+     ======================================== */
+  cell (AND2) {
+    area : 2.0;
+    pin (A) {
+      direction : input;
+      capacitance : 0.005;
+    }
+    pin (B) {
+      direction : input;
+      capacitance : 0.005;
+    }
+    pin (Y) {
+      direction : output;
+      function : "(A & B)";
+      max_capacitance : 0.5;
+      timing () {
+        related_pin : "A";
+        timing_sense : positive_unate;
+        cell_rise (scalar) {
+          values ("0.07");
+        }
+        cell_fall (scalar) {
+          values ("0.06");
+        }
+        rise_transition (scalar) {
+          values ("0.04");
+        }
+        fall_transition (scalar) {
+          values ("0.04");
+        }
+      }
+      timing () {
+        related_pin : "B";
+        timing_sense : positive_unate;
+        cell_rise (scalar) {
+          values ("0.07");
+        }
+        cell_fall (scalar) {
+          values ("0.06");
+        }
+        rise_transition (scalar) {
+          values ("0.04");
+        }
+        fall_transition (scalar) {
+          values ("0.04");
+        }
+      }
+    }
+  }
+
+  /* ========================================
+     D FLIP-FLOP (DFF)
+     ======================================== */
+  cell (DFF) {
+    area : 5.0;
+    ff (IQ, IQN) {
+      clocked_on : "CLK";
+      next_state : "D";
+    }
+    pin (D) {
+      direction : input;
+      capacitance : 0.005;
+      timing () {
+        related_pin : "CLK";
+        timing_type : setup_rising;
+        rise_constraint (scalar) {
+          values ("0.08");
+        }
+        fall_constraint (scalar) {
+          values ("0.08");
+        }
+      }
+      timing () {
+        related_pin : "CLK";
+        timing_type : hold_rising;
+        rise_constraint (scalar) {
+          values ("0.02");
+        }
+        fall_constraint (scalar) {
+          values ("0.02");
+        }
+      }
+    }
+    pin (CLK) {
+      direction : input;
+      capacitance : 0.005;
+      clock : true;
+    }
+    pin (Q) {
+      direction : output;
+      function : "IQ";
+      max_capacitance : 0.5;
+      timing () {
+        related_pin : "CLK";
+        timing_sense : non_unate;
+        timing_type : rising_edge;
+        cell_rise (scalar) {
+          values ("0.12");
+        }
+        cell_fall (scalar) {
+          values ("0.10");
+        }
+        rise_transition (scalar) {
+          values ("0.05");
+        }
+        fall_transition (scalar) {
+          values ("0.05");
+        }
+      }
+    }
+  }
+}

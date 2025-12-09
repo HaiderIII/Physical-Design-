@@ -1,0 +1,127 @@
+/* Liberty Library for Exercise 4: Clock Uncertainty Analysis */
+library(clock_uncertainty) {
+  delay_model : table_lookup;
+  time_unit : "1ns";
+  voltage_unit : "1V";
+  current_unit : "1mA";
+  capacitive_load_unit(1, pF);
+  
+  /* Slew and threshold definitions */
+  slew_lower_threshold_pct_rise : 20.0;
+  slew_upper_threshold_pct_rise : 80.0;
+  slew_lower_threshold_pct_fall : 20.0;
+  slew_upper_threshold_pct_fall : 80.0;
+  input_threshold_pct_rise : 50.0;
+  input_threshold_pct_fall : 50.0;
+  output_threshold_pct_rise : 50.0;
+  output_threshold_pct_fall : 50.0;
+  
+  /* Operating conditions */
+  operating_conditions(typical) {
+    process : 1.0;
+    temperature : 25;
+    voltage : 1.8;
+  }
+  default_operating_conditions : typical;
+
+  /* Default attributes */
+  default_cell_leakage_power : 0.0;
+  default_fanout_load : 1.0;
+  default_inout_pin_cap : 0.005;
+  default_input_pin_cap : 0.005;
+  default_output_pin_cap : 0.0;
+  default_max_transition : 1.5;
+
+  /* ==================================================================== */
+  /* CELL: DFF - D Flip-Flop with Clock                                  */
+  /* Timing: Tclk->Q = 0.8ns, Tsetup = 0.3ns, Thold = 0.2ns             */
+  /* ==================================================================== */
+  cell(DFF) {
+    area : 8.0;
+    ff(IQ, IQN) {
+      clocked_on : "CLK";
+      next_state : "D";
+    }
+    
+    pin(D) {
+      direction : input;
+      capacitance : 0.01;
+      timing() {
+        related_pin : "CLK";
+        timing_type : setup_rising;
+        rise_constraint(scalar) { values("0.3"); }
+        fall_constraint(scalar) { values("0.3"); }
+      }
+      timing() {
+        related_pin : "CLK";
+        timing_type : hold_rising;
+        rise_constraint(scalar) { values("0.2"); }
+        fall_constraint(scalar) { values("0.2"); }
+      }
+    }
+    
+    pin(CLK) {
+      direction : input;
+      capacitance : 0.015;
+      clock : true;
+    }
+    
+    pin(Q) {
+      direction : output;
+      capacitance : 0.0;
+      function : "IQ";
+      timing() {
+        related_pin : "CLK";
+        timing_sense : non_unate;
+        timing_type : rising_edge;
+        
+        cell_rise(scalar) { values("0.8"); }
+        cell_fall(scalar) { values("0.8"); }
+        rise_transition(scalar) { values("0.3"); }
+        fall_transition(scalar) { values("0.3"); }
+      }
+    }
+  }
+
+  /* ==================================================================== */
+  /* CELL: AND2 - 2-Input AND Gate                                       */
+  /* Timing: A/B->Y = 0.5ns                                              */
+  /* ==================================================================== */
+  cell(AND2) {
+    area : 3.0;
+    
+    pin(A) {
+      direction : input;
+      capacitance : 0.008;
+    }
+    
+    pin(B) {
+      direction : input;
+      capacitance : 0.008;
+    }
+    
+    pin(Y) {
+      direction : output;
+      capacitance : 0.0;
+      function : "(A & B)";
+      
+      timing() {
+        related_pin : "A";
+        timing_sense : positive_unate;
+        cell_rise(scalar) { values("0.5"); }
+        cell_fall(scalar) { values("0.5"); }
+        rise_transition(scalar) { values("0.2"); }
+        fall_transition(scalar) { values("0.2"); }
+      }
+      
+      timing() {
+        related_pin : "B";
+        timing_sense : positive_unate;
+        cell_rise(scalar) { values("0.5"); }
+        cell_fall(scalar) { values("0.5"); }
+        rise_transition(scalar) { values("0.2"); }
+        fall_transition(scalar) { values("0.2"); }
+      }
+    }
+  }
+}

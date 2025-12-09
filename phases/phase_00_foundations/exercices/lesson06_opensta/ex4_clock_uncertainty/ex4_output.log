@@ -1,0 +1,330 @@
+OpenSTA 2.7.0 9c9b5659d6 Copyright (c) 2025, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+
+==========================================
+EXERCISE 4: CLOCK UNCERTAINTY ANALYSIS
+Circuit: d_in → FF1 → AND2 → FF2 → q_out
+==========================================
+
+INFO: Loading technology library...
+✓ Library loaded: clock_uncertainty.lib
+
+Available cells: AND2, DFF
+
+INFO: Reading Verilog netlist...
+✓ Design linked: clock_uncertainty_ff2ff
+
+INFO: Applying SDC constraints...
+✓ Constraints loaded (clock period = 10 ns)
+
+
+==========================================
+SCENARIO: BASELINE (Uncertainty = 0.0 ns)
+==========================================
+
+--- SETUP TIMING (Critical Path) ---
+Startpoint: ff2 (rising edge-triggered flip-flop clocked by clk)
+Endpoint: q_out (output port clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout     Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------------
+                  0.00    0.00    0.00   clock clk (rise edge)
+                          0.00    0.00   clock network delay (ideal)
+                  0.00    0.00    0.00 ^ ff2/CLK (DFF)
+     1    0.00    0.30    0.80    0.80 ^ ff2/Q (DFF)
+                  0.30    0.00    0.80 ^ q_out (out)
+                                  0.80   data arrival time
+
+                  0.00   10.00   10.00   clock clk (rise edge)
+                          0.00   10.00   clock network delay (ideal)
+                          0.00   10.00   clock reconvergence pessimism
+                         -3.00    7.00   output external delay
+                                  7.00   data required time
+-----------------------------------------------------------------------------
+                                  7.00   data required time
+                                 -0.80   data arrival time
+-----------------------------------------------------------------------------
+                                  6.20   slack (MET)
+
+
+
+--- ALL SETUP PATHS (Summary) ---
+  Path 1: Q          → q_out       Slack:   6.200 ns (MET)
+
+--- HOLD TIMING (Critical Path) ---
+Startpoint: ff1 (rising edge-triggered flip-flop clocked by clk)
+Endpoint: ff2 (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: min
+
+Fanout     Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------------
+                  0.00    0.00    0.00   clock clk (rise edge)
+                          0.00    0.00   clock network delay (ideal)
+                  0.00    0.00    0.00 ^ ff1/CLK (DFF)
+     2    0.02    0.30    0.80    0.80 ^ ff1/Q (DFF)
+                  0.30    0.00    0.80 ^ and_gate/B (AND2)
+     1    0.01    0.20    0.50    1.30 ^ and_gate/Y (AND2)
+                  0.20    0.00    1.30 ^ ff2/D (DFF)
+                                  1.30   data arrival time
+
+                  0.00    0.00    0.00   clock clk (rise edge)
+                          0.00    0.00   clock network delay (ideal)
+                          0.00    0.00   clock reconvergence pessimism
+                                  0.00 ^ ff2/CLK (DFF)
+                          0.20    0.20   library hold time
+                                  0.20   data required time
+-----------------------------------------------------------------------------
+                                  0.20   data required time
+                                 -1.30   data arrival time
+-----------------------------------------------------------------------------
+                                  1.10   slack (MET)
+
+
+
+--- ALL HOLD PATHS (Summary) ---
+  Path 1: Q          → D           Slack:   1.100 ns (MET)
+
+
+==========================================
+SCENARIO: LOW UNCERTAINTY (Uncertainty = 0.2 ns)
+==========================================
+
+--- SETUP TIMING (Critical Path) ---
+Startpoint: ff2 (rising edge-triggered flip-flop clocked by clk)
+Endpoint: q_out (output port clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout     Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------------
+                  0.00    0.00    0.00   clock clk (rise edge)
+                          0.00    0.00   clock network delay (ideal)
+                  0.00    0.00    0.00 ^ ff2/CLK (DFF)
+     1    0.00    0.30    0.80    0.80 ^ ff2/Q (DFF)
+                  0.30    0.00    0.80 ^ q_out (out)
+                                  0.80   data arrival time
+
+                  0.00   10.00   10.00   clock clk (rise edge)
+                          0.00   10.00   clock network delay (ideal)
+                         -0.20    9.80   clock uncertainty
+                          0.00    9.80   clock reconvergence pessimism
+                         -3.00    6.80   output external delay
+                                  6.80   data required time
+-----------------------------------------------------------------------------
+                                  6.80   data required time
+                                 -0.80   data arrival time
+-----------------------------------------------------------------------------
+                                  6.00   slack (MET)
+
+
+
+--- ALL SETUP PATHS (Summary) ---
+  Path 1: Q          → q_out       Slack:   6.000 ns (MET)
+
+--- HOLD TIMING (Critical Path) ---
+Startpoint: ff1 (rising edge-triggered flip-flop clocked by clk)
+Endpoint: ff2 (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: min
+
+Fanout     Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------------
+                  0.00    0.00    0.00   clock clk (rise edge)
+                          0.00    0.00   clock network delay (ideal)
+                  0.00    0.00    0.00 ^ ff1/CLK (DFF)
+     2    0.02    0.30    0.80    0.80 ^ ff1/Q (DFF)
+                  0.30    0.00    0.80 ^ and_gate/B (AND2)
+     1    0.01    0.20    0.50    1.30 ^ and_gate/Y (AND2)
+                  0.20    0.00    1.30 ^ ff2/D (DFF)
+                                  1.30   data arrival time
+
+                  0.00    0.00    0.00   clock clk (rise edge)
+                          0.00    0.00   clock network delay (ideal)
+                          0.20    0.20   clock uncertainty
+                          0.00    0.20   clock reconvergence pessimism
+                                  0.20 ^ ff2/CLK (DFF)
+                          0.20    0.40   library hold time
+                                  0.40   data required time
+-----------------------------------------------------------------------------
+                                  0.40   data required time
+                                 -1.30   data arrival time
+-----------------------------------------------------------------------------
+                                  0.90   slack (MET)
+
+
+
+--- ALL HOLD PATHS (Summary) ---
+  Path 1: Q          → D           Slack:   0.900 ns (MET)
+
+
+==========================================
+SCENARIO: MEDIUM UNCERTAINTY (Uncertainty = 0.5 ns)
+==========================================
+
+--- SETUP TIMING (Critical Path) ---
+Startpoint: ff2 (rising edge-triggered flip-flop clocked by clk)
+Endpoint: q_out (output port clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout     Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------------
+                  0.00    0.00    0.00   clock clk (rise edge)
+                          0.00    0.00   clock network delay (ideal)
+                  0.00    0.00    0.00 ^ ff2/CLK (DFF)
+     1    0.00    0.30    0.80    0.80 ^ ff2/Q (DFF)
+                  0.30    0.00    0.80 ^ q_out (out)
+                                  0.80   data arrival time
+
+                  0.00   10.00   10.00   clock clk (rise edge)
+                          0.00   10.00   clock network delay (ideal)
+                         -0.50    9.50   clock uncertainty
+                          0.00    9.50   clock reconvergence pessimism
+                         -3.00    6.50   output external delay
+                                  6.50   data required time
+-----------------------------------------------------------------------------
+                                  6.50   data required time
+                                 -0.80   data arrival time
+-----------------------------------------------------------------------------
+                                  5.70   slack (MET)
+
+
+
+--- ALL SETUP PATHS (Summary) ---
+  Path 1: Q          → q_out       Slack:   5.700 ns (MET)
+
+--- HOLD TIMING (Critical Path) ---
+Startpoint: ff1 (rising edge-triggered flip-flop clocked by clk)
+Endpoint: ff2 (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: min
+
+Fanout     Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------------
+                  0.00    0.00    0.00   clock clk (rise edge)
+                          0.00    0.00   clock network delay (ideal)
+                  0.00    0.00    0.00 ^ ff1/CLK (DFF)
+     2    0.02    0.30    0.80    0.80 ^ ff1/Q (DFF)
+                  0.30    0.00    0.80 ^ and_gate/B (AND2)
+     1    0.01    0.20    0.50    1.30 ^ and_gate/Y (AND2)
+                  0.20    0.00    1.30 ^ ff2/D (DFF)
+                                  1.30   data arrival time
+
+                  0.00    0.00    0.00   clock clk (rise edge)
+                          0.00    0.00   clock network delay (ideal)
+                          0.50    0.50   clock uncertainty
+                          0.00    0.50   clock reconvergence pessimism
+                                  0.50 ^ ff2/CLK (DFF)
+                          0.20    0.70   library hold time
+                                  0.70   data required time
+-----------------------------------------------------------------------------
+                                  0.70   data required time
+                                 -1.30   data arrival time
+-----------------------------------------------------------------------------
+                                  0.60   slack (MET)
+
+
+
+--- ALL HOLD PATHS (Summary) ---
+  Path 1: Q          → D           Slack:   0.600 ns (MET)
+
+
+==========================================
+SCENARIO: HIGH UNCERTAINTY (Uncertainty = 1.0 ns)
+==========================================
+
+--- SETUP TIMING (Critical Path) ---
+Startpoint: ff2 (rising edge-triggered flip-flop clocked by clk)
+Endpoint: q_out (output port clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout     Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------------
+                  0.00    0.00    0.00   clock clk (rise edge)
+                          0.00    0.00   clock network delay (ideal)
+                  0.00    0.00    0.00 ^ ff2/CLK (DFF)
+     1    0.00    0.30    0.80    0.80 ^ ff2/Q (DFF)
+                  0.30    0.00    0.80 ^ q_out (out)
+                                  0.80   data arrival time
+
+                  0.00   10.00   10.00   clock clk (rise edge)
+                          0.00   10.00   clock network delay (ideal)
+                         -1.00    9.00   clock uncertainty
+                          0.00    9.00   clock reconvergence pessimism
+                         -3.00    6.00   output external delay
+                                  6.00   data required time
+-----------------------------------------------------------------------------
+                                  6.00   data required time
+                                 -0.80   data arrival time
+-----------------------------------------------------------------------------
+                                  5.20   slack (MET)
+
+
+
+--- ALL SETUP PATHS (Summary) ---
+  Path 1: Q          → q_out       Slack:   5.200 ns (MET)
+
+--- HOLD TIMING (Critical Path) ---
+Startpoint: ff1 (rising edge-triggered flip-flop clocked by clk)
+Endpoint: ff2 (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: min
+
+Fanout     Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------------
+                  0.00    0.00    0.00   clock clk (rise edge)
+                          0.00    0.00   clock network delay (ideal)
+                  0.00    0.00    0.00 ^ ff1/CLK (DFF)
+     2    0.02    0.30    0.80    0.80 ^ ff1/Q (DFF)
+                  0.30    0.00    0.80 ^ and_gate/B (AND2)
+     1    0.01    0.20    0.50    1.30 ^ and_gate/Y (AND2)
+                  0.20    0.00    1.30 ^ ff2/D (DFF)
+                                  1.30   data arrival time
+
+                  0.00    0.00    0.00   clock clk (rise edge)
+                          0.00    0.00   clock network delay (ideal)
+                          1.00    1.00   clock uncertainty
+                          0.00    1.00   clock reconvergence pessimism
+                                  1.00 ^ ff2/CLK (DFF)
+                          0.20    1.20   library hold time
+                                  1.20   data required time
+-----------------------------------------------------------------------------
+                                  1.20   data required time
+                                 -1.30   data arrival time
+-----------------------------------------------------------------------------
+                                  0.10   slack (MET)
+
+
+
+--- ALL HOLD PATHS (Summary) ---
+  Path 1: Q          → D           Slack:   0.100 ns (MET)
+
+
+==========================================
+SUMMARY: Clock Uncertainty Impact
+==========================================
+
+Scenario                  Setup Slack (ns)     Hold Slack (ns)     
+------------------------- -------------------- --------------------
+Baseline (0.0 ns)         6.200                1.100               
+Low (0.2 ns)              6.000                0.900               
+Medium (0.5 ns)           5.700                0.600               
+High (1.0 ns)             5.200                0.100               
+
+==========================================
+KEY OBSERVATIONS:
+  • Setup slack DECREASES with uncertainty
+  • Hold slack DECREASES with uncertainty
+  • High uncertainty = stricter timing
+==========================================
+
+✅ Analysis completed successfully!
+

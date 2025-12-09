@@ -1,0 +1,294 @@
+OpenSTA 2.7.0 9c9b5659d6 Copyright (c) 2025, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+INFO: Loading configuration...
+
+=========================================
+OpenSTA Configuration
+=========================================
+Lesson Directory   : /home/faiz/projects/Physical-Design/phases/phase_00_foundations/exercices/lesson06_opensta
+Resource Directory : /home/faiz/projects/Physical-Design/phases/phase_00_foundations/resources/lesson06_opensta
+Netlist Directory  : /home/faiz/projects/Physical-Design/phases/phase_00_foundations/resources/lesson06_opensta
+SDC Directory      : /home/faiz/projects/Physical-Design/phases/phase_00_foundations/resources/lesson06_opensta
+Liberty Library    : /home/faiz/projects/Physical-Design/phases/phase_00_foundations/resources/lesson06_opensta/simple.lib
+=========================================
+
+INFO: Configuration loaded successfully
+INFO: Loading utility functions...
+INFO: Utility functions loaded successfully
+
+
+=========================================
+Exercise 3: Multi-Path Timing Analysis
+=========================================
+
+📖 Reading liberty library...
+✅ Loading Liberty: simple.lib
+📖 Reading netlist: multi_path.v
+✅ Loading Netlist: multi_path.v
+✅ Linking design: multi_path
+✅ Design linked successfully
+📖 Reading constraints: multi_path.sdc
+✅ Loading Constraints: multi_path.sdc
+
+🔍 Analyzing timing paths...
+
+
+--- ALL PATHS FROM A TO Y ---
+Startpoint: A (input port clocked by clk)
+Endpoint: Y (output port clocked by clk)
+Path Group: clk
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock clk (rise edge)
+   0.00    0.00   clock network delay (ideal)
+   2.00    2.00 ^ input external delay
+   0.00    2.00 ^ A (in)
+   0.09    2.09 ^ u_or/Y (OR2)
+   0.12    2.21 ^ u_mux/Y (MUX2)
+   0.00    2.21 ^ Y (out)
+           2.21   data arrival time
+
+  10.00   10.00   clock clk (rise edge)
+   0.00   10.00   clock network delay (ideal)
+   0.00   10.00   clock reconvergence pessimism
+  -2.00    8.00   output external delay
+           8.00   data required time
+---------------------------------------------------------
+           8.00   data required time
+          -2.21   data arrival time
+---------------------------------------------------------
+           5.79   slack (MET)
+
+
+
+--- PATH THROUGH AND2 GATE ---
+Startpoint: B (input port clocked by clk)
+Endpoint: Y (output port clocked by clk)
+Path Group: clk
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock clk (rise edge)
+   0.00    0.00   clock network delay (ideal)
+   2.00    2.00 ^ input external delay
+   0.00    2.00 ^ B (in)
+   0.08    2.08 ^ u_and/Y (AND2)
+   0.12    2.20 ^ u_mux/Y (MUX2)
+   0.00    2.20 ^ Y (out)
+           2.20   data arrival time
+
+  10.00   10.00   clock clk (rise edge)
+   0.00   10.00   clock network delay (ideal)
+   0.00   10.00   clock reconvergence pessimism
+  -2.00    8.00   output external delay
+           8.00   data required time
+---------------------------------------------------------
+           8.00   data required time
+          -2.20   data arrival time
+---------------------------------------------------------
+           5.80   slack (MET)
+
+
+
+--- PATH THROUGH OR2 GATE ---
+Startpoint: B (input port clocked by clk)
+Endpoint: Y (output port clocked by clk)
+Path Group: clk
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock clk (rise edge)
+   0.00    0.00   clock network delay (ideal)
+   2.00    2.00 ^ input external delay
+   0.00    2.00 ^ B (in)
+   0.09    2.09 ^ u_or/Y (OR2)
+   0.12    2.21 ^ u_mux/Y (MUX2)
+   0.00    2.21 ^ Y (out)
+           2.21   data arrival time
+
+  10.00   10.00   clock clk (rise edge)
+   0.00   10.00   clock network delay (ideal)
+   0.00   10.00   clock reconvergence pessimism
+  -2.00    8.00   output external delay
+           8.00   data required time
+---------------------------------------------------------
+           8.00   data required time
+          -2.21   data arrival time
+---------------------------------------------------------
+           5.79   slack (MET)
+
+
+
+--- ALL PATHS TO OUTPUT Y ---
+Startpoint: B (input port clocked by clk)
+Endpoint: Y (output port clocked by clk)
+Path Group: clk
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock clk (rise edge)
+   0.00    0.00   clock network delay (ideal)
+   2.00    2.00 ^ input external delay
+   0.00    2.00 ^ B (in)
+   0.09    2.09 ^ u_or/Y (OR2)
+   0.12    2.21 ^ u_mux/Y (MUX2)
+   0.00    2.21 ^ Y (out)
+           2.21   data arrival time
+
+  10.00   10.00   clock clk (rise edge)
+   0.00   10.00   clock network delay (ideal)
+   0.00   10.00   clock reconvergence pessimism
+  -2.00    8.00   output external delay
+           8.00   data required time
+---------------------------------------------------------
+           8.00   data required time
+          -2.21   data arrival time
+---------------------------------------------------------
+           5.79   slack (MET)
+
+
+
+--- SETUP TIMING (Max Delay) ---
+Startpoint: B (input port clocked by clk)
+Endpoint: Y (output port clocked by clk)
+Path Group: clk
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock clk (rise edge)
+   0.00    0.00   clock network delay (ideal)
+   2.00    2.00 ^ input external delay
+   0.00    2.00 ^ B (in)
+   0.09    2.09 ^ u_or/Y (OR2)
+   0.12    2.21 ^ u_mux/Y (MUX2)
+   0.00    2.21 ^ Y (out)
+           2.21   data arrival time
+
+  10.00   10.00   clock clk (rise edge)
+   0.00   10.00   clock network delay (ideal)
+   0.00   10.00   clock reconvergence pessimism
+  -2.00    8.00   output external delay
+           8.00   data required time
+---------------------------------------------------------
+           8.00   data required time
+          -2.21   data arrival time
+---------------------------------------------------------
+           5.79   slack (MET)
+
+
+
+--- HOLD TIMING (Min Delay) ---
+Startpoint: sel (input port clocked by clk)
+Endpoint: Y (output port clocked by clk)
+Path Group: clk
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock clk (rise edge)
+   0.00    0.00   clock network delay (ideal)
+   1.00    1.00 ^ input external delay
+   0.00    1.00 ^ sel (in)
+   0.14    1.14 v u_mux/Y (MUX2)
+   0.00    1.14 v Y (out)
+           1.14   data arrival time
+
+   0.00    0.00   clock clk (rise edge)
+   0.00    0.00   clock network delay (ideal)
+   0.00    0.00   clock reconvergence pessimism
+  -1.00   -1.00   output external delay
+          -1.00   data required time
+---------------------------------------------------------
+          -1.00   data required time
+          -1.14   data arrival time
+---------------------------------------------------------
+           2.14   slack (MET)
+
+
+
+--- TIMING SUMMARY ---
+Startpoint: B (input port clocked by clk)
+Endpoint: Y (output port clocked by clk)
+Path Group: clk
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock clk (rise edge)
+   0.00    0.00   clock network delay (ideal)
+   2.00    2.00 ^ input external delay
+   0.00    2.00 ^ B (in)
+   0.09    2.09 ^ u_or/Y (OR2)
+   0.12    2.21 ^ u_mux/Y (MUX2)
+   0.00    2.21 ^ Y (out)
+           2.21   data arrival time
+
+  10.00   10.00   clock clk (rise edge)
+   0.00   10.00   clock network delay (ideal)
+   0.00   10.00   clock reconvergence pessimism
+  -2.00    8.00   output external delay
+           8.00   data required time
+---------------------------------------------------------
+           8.00   data required time
+          -2.21   data arrival time
+---------------------------------------------------------
+           5.79   slack (MET)
+
+
+Startpoint: sel (input port clocked by clk)
+Endpoint: Y (output port clocked by clk)
+Path Group: clk
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock clk (rise edge)
+   0.00    0.00   clock network delay (ideal)
+   1.00    1.00 ^ input external delay
+   0.00    1.00 ^ sel (in)
+   0.14    1.14 v u_mux/Y (MUX2)
+   0.00    1.14 v Y (out)
+           1.14   data arrival time
+
+   0.00    0.00   clock clk (rise edge)
+   0.00    0.00   clock network delay (ideal)
+   0.00    0.00   clock reconvergence pessimism
+  -1.00   -1.00   output external delay
+          -1.00   data required time
+---------------------------------------------------------
+          -1.00   data required time
+          -1.14   data arrival time
+---------------------------------------------------------
+           2.14   slack (MET)
+
+
+
+--- GATE DELAY COMPARISON ---
+
+📊 From timing reports above:
+   • AND2 gate (u_and): ~0.08 ns
+   • OR2 gate (u_or):   ~0.09 ns  (slightly slower)
+   • MUX2 gate (u_mux): ~0.12 ns
+
+✓ The OR2 path is the critical path (worst slack)
+
+--- ANALYSIS COMPLETE ---
+✅ All timing constraints are MET
+✅ Positive slack on all paths
+✅ OR2 path is slightly slower than AND2 path
+✅ Total delay budget: 10.0 ns (clock period)
+✅ Used: ~2.21 ns, Available margin: ~5.79 ns
+
+�� Check the questions in README.md
+📊 Full results saved to ex3_output.log
+
