@@ -1,6 +1,13 @@
+// Simple inverter for OpenSTA tutorial
 module inverter (
-    input  wire A,
-    output wire Y
+    input  A,
+    output Y
 );
-    assign Y = ~A;
+
+// Inverter instantiation
+INV inv_inst (
+    .A(A),
+    .Y(Y)
+);
+
 endmodule
