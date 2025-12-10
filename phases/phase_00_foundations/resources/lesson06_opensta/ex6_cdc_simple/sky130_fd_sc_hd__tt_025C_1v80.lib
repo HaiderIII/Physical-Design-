@@ -1,0 +1,399 @@
+/* 
+ * SKY130 Standard Cell Library - Typical Corner
+ * Process: TT (Typical-Typical)
+ * Temperature: 25C
+ * Voltage: 1.80V
+ * 
+ * Version simplifiee pour Exercise 6 CDC
+ */
+
+library (sky130_fd_sc_hd__tt_025C_1v80) {
+    
+    /* ==================== ATTRIBUTS GENERAUX ==================== */
+    
+    delay_model : table_lookup;
+    
+    /* Unites */
+    time_unit : "1ns";
+    voltage_unit : "1V";
+    current_unit : "1mA";
+    leakage_power_unit : "1nW";
+    capacitive_load_unit (1, pf);
+    pulling_resistance_unit : "1kohm";
+    
+    /* Conditions d'operation par defaut */
+    default_operating_conditions : tt_025C_1v80;
+    
+    operating_conditions (tt_025C_1v80) {
+        process : 1.0;
+        temperature : 25;
+        voltage : 1.8;
+        tree_type : "balanced_tree";
+    }
+    
+    /* Seuils de tension */
+    slew_lower_threshold_pct_rise : 20.0;
+    slew_upper_threshold_pct_rise : 80.0;
+    slew_lower_threshold_pct_fall : 20.0;
+    slew_upper_threshold_pct_fall : 80.0;
+    
+    input_threshold_pct_rise : 50.0;
+    input_threshold_pct_fall : 50.0;
+    output_threshold_pct_rise : 50.0;
+    output_threshold_pct_fall : 50.0;
+    
+    /* Parametres de metastabilite (IMPORTANT pour CDC !) */
+    default_cell_leakage_power : 0.1;
+    default_fanout_load : 1.0;
+    default_inout_pin_cap : 0.001;
+    default_input_pin_cap : 0.001;
+    default_output_pin_cap : 0.0;
+    default_max_transition : 1.5;
+    
+    
+    /* ==================== FLIP-FLOP STANDARD (D-FF) ==================== */
+    
+    cell (sky130_fd_sc_hd__dfxtp_1) {
+        
+        area : 10.248;
+        cell_leakage_power : 0.0234;
+        
+        /* Definition du sequential element */
+        ff (IQ, IQN) {
+            clocked_on : "CLK";
+            next_state : "D";
+            clear : "!RESET_B";
+            preset : "!SET_B";
+        }
+        
+        /* Pin CLK (horloge) */
+        pin (CLK) {
+            direction : input;
+            clock : true;
+            capacitance : 0.00512;
+            
+            max_transition : 1.5;
+            
+            internal_power () {
+                rise_power (scalar) {
+                    values ("0.0234");
+                }
+                fall_power (scalar) {
+                    values ("0.0198");
+                }
+            }
+        }
+        
+        /* Pin D (data input) */
+        pin (D) {
+            direction : input;
+            capacitance : 0.00187;
+            
+            /* SETUP TIME - Critique pour CDC ! */
+            timing () {
+                related_pin : "CLK";
+                timing_type : setup_rising;
+                
+                rise_constraint (scalar) {
+                    values ("0.0513");  /* 51.3 ps setup time */
+                }
+                fall_constraint (scalar) {
+                    values ("0.0498");  /* 49.8 ps setup time */
+                }
+            }
+            
+            /* HOLD TIME - Critique pour CDC ! */
+            timing () {
+                related_pin : "CLK";
+                timing_type : hold_rising;
+                
+                rise_constraint (scalar) {
+                    values ("0.0289");  /* 28.9 ps hold time */
+                }
+                fall_constraint (scalar) {
+                    values ("0.0312");  /* 31.2 ps hold time */
+                }
+            }
+            
+            internal_power () {
+                rise_power (scalar) {
+                    values ("0.0045");
+                }
+                fall_power (scalar) {
+                    values ("0.0038");
+                }
+            }
+        }
+        
+        /* Pin Q (data output) */
+        pin (Q) {
+            direction : output;
+            capacitance : 0.00089;
+            function : "IQ";
+            
+            max_capacitance : 0.15;
+            
+            /* CLK-to-Q delay */
+            timing () {
+                related_pin : "CLK";
+                timing_type : rising_edge;
+                timing_sense : non_unate;
+                
+                /* Rise delay */
+                cell_rise (scalar) {
+                    values ("0.1234");  /* 123.4 ps Tck->q rise */
+                }
+                rise_transition (scalar) {
+                    values ("0.0456");  /* 45.6 ps transition */
+                }
+                
+                /* Fall delay */
+                cell_fall (scalar) {
+                    values ("0.0987");  /* 98.7 ps Tck->q fall */
+                }
+                fall_transition (scalar) {
+                    values ("0.0398");  /* 39.8 ps transition */
+                }
+            }
+            
+            internal_power () {
+                rise_power (scalar) {
+                    values ("0.0067");
+                }
+                fall_power (scalar) {
+                    values ("0.0054");
+                }
+            }
+        }
+        
+        /* Pin RESET_B (active low reset) */
+        pin (RESET_B) {
+            direction : input;
+            capacitance : 0.00234;
+        }
+        
+        /* Pin SET_B (active low set) */
+        pin (SET_B) {
+            direction : input;
+            capacitance : 0.00198;
+        }
+    }
+    
+    
+    /* ==================== BUFFER ==================== */
+    
+    cell (sky130_fd_sc_hd__buf_1) {
+        
+        area : 3.744;
+        cell_leakage_power : 0.0098;
+        
+        /* Pin A (input) */
+        pin (A) {
+            direction : input;
+            capacitance : 0.00234;
+            
+            max_transition : 1.5;
+        }
+        
+        /* Pin X (output) */
+        pin (X) {
+            direction : output;
+            capacitance : 0.00067;
+            function : "A";
+            
+            max_capacitance : 0.20;
+            
+            /* Propagation delay A->X */
+            timing () {
+                related_pin : "A";
+                timing_sense : positive_unate;
+                
+                /* Rise delay */
+                cell_rise (scalar) {
+                    values ("0.0523");  /* 52.3 ps delay */
+                }
+                rise_transition (scalar) {
+                    values ("0.0289");  /* 28.9 ps transition */
+                }
+                
+                /* Fall delay */
+                cell_fall (scalar) {
+                    values ("0.0467");  /* 46.7 ps delay */
+                }
+                fall_transition (scalar) {
+                    values ("0.0256");  /* 25.6 ps transition */
+                }
+            }
+            
+            internal_power () {
+                rise_power (scalar) {
+                    values ("0.0023");
+                }
+                fall_power (scalar) {
+                    values ("0.0019");
+                }
+            }
+        }
+    }
+    
+    
+    /* ==================== INVERTER ==================== */
+    
+    cell (sky130_fd_sc_hd__inv_1) {
+        
+        area : 2.496;
+        cell_leakage_power : 0.0067;
+        
+        /* Pin A (input) */
+        pin (A) {
+            direction : input;
+            capacitance : 0.00198;
+            
+            max_transition : 1.5;
+        }
+        
+        /* Pin Y (output) */
+        pin (Y) {
+            direction : output;
+            capacitance : 0.00045;
+            function : "!A";
+            
+            max_capacitance : 0.18;
+            
+            /* Propagation delay A->Y */
+            timing () {
+                related_pin : "A";
+                timing_sense : negative_unate;
+                
+                /* Rise delay (input falls) */
+                cell_rise (scalar) {
+                    values ("0.0489");  /* 48.9 ps delay */
+                }
+                rise_transition (scalar) {
+                    values ("0.0267");  /* 26.7 ps transition */
+                }
+                
+                /* Fall delay (input rises) */
+                cell_fall (scalar) {
+                    values ("0.0434");  /* 43.4 ps delay */
+                }
+                fall_transition (scalar) {
+                    values ("0.0234");  /* 23.4 ps transition */
+                }
+            }
+            
+            internal_power () {
+                rise_power (scalar) {
+                    values ("0.0018");
+                }
+                fall_power (scalar) {
+                    values ("0.0015");
+                }
+            }
+        }
+    }
+    
+    
+    /* ==================== AND2 (2-input AND gate) ==================== */
+    
+    cell (sky130_fd_sc_hd__and2_1) {
+        
+        area : 4.992;
+        cell_leakage_power : 0.0123;
+        
+        /* Pin A (input 1) */
+        pin (A) {
+            direction : input;
+            capacitance : 0.00212;
+            max_transition : 1.5;
+        }
+        
+        /* Pin B (input 2) */
+        pin (B) {
+            direction : input;
+            capacitance : 0.00209;
+            max_transition : 1.5;
+        }
+        
+        /* Pin X (output) */
+        pin (X) {
+            direction : output;
+            capacitance : 0.00078;
+            function : "(A & B)";
+            
+            max_capacitance : 0.16;
+            
+            /* Timing from A */
+            timing () {
+                related_pin : "A";
+                timing_sense : positive_unate;
+                
+                cell_rise (scalar) { values ("0.0678"); }
+                rise_transition (scalar) { values ("0.0345"); }
+                cell_fall (scalar) { values ("0.0598"); }
+                fall_transition (scalar) { values ("0.0312"); }
+            }
+            
+            /* Timing from B */
+            timing () {
+                related_pin : "B";
+                timing_sense : positive_unate;
+                
+                cell_rise (scalar) { values ("0.0689"); }
+                rise_transition (scalar) { values ("0.0356"); }
+                cell_fall (scalar) { values ("0.0612"); }
+                fall_transition (scalar) { values ("0.0323"); }
+            }
+        }
+    }
+    
+    
+    /* ==================== OR2 (2-input OR gate) ==================== */
+    
+    cell (sky130_fd_sc_hd__or2_1) {
+        
+        area : 4.992;
+        cell_leakage_power : 0.0134;
+        
+        pin (A) {
+            direction : input;
+            capacitance : 0.00223;
+            max_transition : 1.5;
+        }
+        
+        pin (B) {
+            direction : input;
+            capacitance : 0.00218;
+            max_transition : 1.5;
+        }
+        
+        pin (X) {
+            direction : output;
+            capacitance : 0.00081;
+            function : "(A | B)";
+            
+            max_capacitance : 0.17;
+            
+            timing () {
+                related_pin : "A";
+                timing_sense : positive_unate;
+                
+                cell_rise (scalar) { values ("0.0712"); }
+                rise_transition (scalar) { values ("0.0367"); }
+                cell_fall (scalar) { values ("0.0623"); }
+                fall_transition (scalar) { values ("0.0334"); }
+            }
+            
+            timing () {
+                related_pin : "B";
+                timing_sense : positive_unate;
+                
+                cell_rise (scalar) { values ("0.0723"); }
+                rise_transition (scalar) { values ("0.0378"); }
+                cell_fall (scalar) { values ("0.0634"); }
+                fall_transition (scalar) { values ("0.0345"); }
+            }
+        }
+    }
+    
+} /* End of library */
