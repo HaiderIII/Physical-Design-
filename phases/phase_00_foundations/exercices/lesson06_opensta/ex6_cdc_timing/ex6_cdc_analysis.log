@@ -1,0 +1,267 @@
+OpenSTA 2.7.0 9c9b5659d6 Copyright (c) 2025, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+
+==========================================
+  INITIALISATION OpenSTA - Ex6 CDC
+==========================================
+
+Chargement de la library : /home/faiz/projects/Physical-Design/phases/phase_00_foundations/resources/lesson06_opensta/ex6_cdc_simple/sky130_fd_sc_hd__tt_025C_1v80.lib
+Chargement du netlist : /home/faiz/projects/Physical-Design/phases/phase_00_foundations/resources/lesson06_opensta/ex6_cdc_simple/design_cdc_simple.v
+Chargement des contraintes : /home/faiz/projects/Physical-Design/phases/phase_00_foundations/resources/lesson06_opensta/ex6_cdc_simple/design_cdc_simple.sdc
+
+==========================================
+  RAPPORT TIMING CDC - Ex6 Simple
+==========================================
+
+--- HORLOGES DEFINIES ---
+  clk_fast : Période = 10.000000 ns
+  clk_slow : Période = 20.000000 ns
+
+--- 1. CHEMIN D'ENTRÉE (data_in -> domain_a_ff) ---
+Startpoint: data_in (input port clocked by clk_fast)
+Endpoint: domain_a_ff (rising edge-triggered flip-flop clocked by clk_fast)
+Path Group: clk_fast
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock clk_fast (rise edge)
+   0.00    0.00   clock network delay (ideal)
+   2.00    2.00 ^ input external delay
+   0.00    2.00 ^ data_in (in)
+   0.00    2.00 ^ domain_a_ff/D (sky130_fd_sc_hd__dfxtp_1)
+           2.00   data arrival time
+
+  10.00   10.00   clock clk_fast (rise edge)
+   0.00   10.00   clock network delay (ideal)
+   0.00   10.00   clock reconvergence pessimism
+          10.00 ^ domain_a_ff/CLK (sky130_fd_sc_hd__dfxtp_1)
+  -0.05    9.95   library setup time
+           9.95   data required time
+---------------------------------------------------------
+           9.95   data required time
+          -2.00   data arrival time
+---------------------------------------------------------
+           7.95   slack (MET)
+
+
+
+--- 2. CHEMIN CDC CROSSING (domain_a_ff -> sync_ff1) ---
+    ⚠️  Chemins asynchrones - Utilisation de set_max_delay
+Startpoint: domain_a_ff (rising edge-triggered flip-flop clocked by clk_fast)
+Endpoint: sync_ff1 (rising edge-triggered flip-flop)
+Path Group: unconstrained
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00 ^ domain_a_ff/CLK (sky130_fd_sc_hd__dfxtp_1)
+   0.12    0.12 ^ domain_a_ff/Q (sky130_fd_sc_hd__dfxtp_1)
+   0.00    0.12 ^ sync_ff1/D (sky130_fd_sc_hd__dfxtp_1)
+           0.12   data arrival time
+---------------------------------------------------------
+(Path is unconstrained)
+
+
+
+--- 3. SYNCHRONIZER Stage 1->2 (sync_ff1 -> sync_ff2) ---
+Startpoint: sync_ff1 (rising edge-triggered flip-flop clocked by clk_slow)
+Endpoint: sync_ff2 (rising edge-triggered flip-flop clocked by clk_slow)
+Path Group: clk_slow
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock clk_slow (rise edge)
+   0.00    0.00   clock network delay (ideal)
+   0.00    0.00 ^ sync_ff1/CLK (sky130_fd_sc_hd__dfxtp_1)
+   0.12    0.12 ^ sync_ff1/Q (sky130_fd_sc_hd__dfxtp_1)
+   0.00    0.12 ^ sync_ff2/D (sky130_fd_sc_hd__dfxtp_1)
+           0.12   data arrival time
+
+  20.00   20.00   clock clk_slow (rise edge)
+   0.00   20.00   clock network delay (ideal)
+   0.00   20.00   clock reconvergence pessimism
+          20.00 ^ sync_ff2/CLK (sky130_fd_sc_hd__dfxtp_1)
+  -0.05   19.95   library setup time
+          19.95   data required time
+---------------------------------------------------------
+          19.95   data required time
+          -0.12   data arrival time
+---------------------------------------------------------
+          19.83   slack (MET)
+
+
+
+--- 4. SYNCHRONIZER Stage 2->Out (sync_ff2 -> domain_b_ff) ---
+Startpoint: sync_ff2 (rising edge-triggered flip-flop clocked by clk_slow)
+Endpoint: domain_b_ff (rising edge-triggered flip-flop clocked by clk_slow)
+Path Group: clk_slow
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock clk_slow (rise edge)
+   0.00    0.00   clock network delay (ideal)
+   0.00    0.00 ^ sync_ff2/CLK (sky130_fd_sc_hd__dfxtp_1)
+   0.12    0.12 ^ sync_ff2/Q (sky130_fd_sc_hd__dfxtp_1)
+   0.00    0.12 ^ domain_b_ff/D (sky130_fd_sc_hd__dfxtp_1)
+           0.12   data arrival time
+
+  20.00   20.00   clock clk_slow (rise edge)
+   0.00   20.00   clock network delay (ideal)
+   0.00   20.00   clock reconvergence pessimism
+          20.00 ^ domain_b_ff/CLK (sky130_fd_sc_hd__dfxtp_1)
+  -0.05   19.95   library setup time
+          19.95   data required time
+---------------------------------------------------------
+          19.95   data required time
+          -0.12   data arrival time
+---------------------------------------------------------
+          19.83   slack (MET)
+
+
+
+--- 5. CHEMIN DE SORTIE (domain_b_ff -> data_out) ---
+Startpoint: domain_b_ff (rising edge-triggered flip-flop clocked by clk_slow)
+Endpoint: data_out (output port clocked by clk_slow)
+Path Group: clk_slow
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock clk_slow (rise edge)
+   0.00    0.00   clock network delay (ideal)
+   0.00    0.00 ^ domain_b_ff/CLK (sky130_fd_sc_hd__dfxtp_1)
+   0.12    0.12 ^ domain_b_ff/Q (sky130_fd_sc_hd__dfxtp_1)
+   0.00    0.12 ^ data_out (out)
+           0.12   data arrival time
+
+  20.00   20.00   clock clk_slow (rise edge)
+   0.00   20.00   clock network delay (ideal)
+   0.00   20.00   clock reconvergence pessimism
+  -2.00   18.00   output external delay
+          18.00   data required time
+---------------------------------------------------------
+          18.00   data required time
+          -0.12   data arrival time
+---------------------------------------------------------
+          17.88   slack (MET)
+
+
+
+==========================================
+  RÉSUMÉ GLOBAL
+==========================================
+
+--- TOP 5 CHEMINS CRITIQUES (clk_slow) ---
+Warning: run_sta_cdc_simple.tcl line 1, report_checks -group_count is deprecated. Use -group_path_count instead.
+Startpoint: domain_b_ff (rising edge-triggered flip-flop clocked by clk_slow)
+Endpoint: data_out (output port clocked by clk_slow)
+Path Group: clk_slow
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock clk_slow (rise edge)
+   0.00    0.00   clock network delay (ideal)
+   0.00    0.00 ^ domain_b_ff/CLK (sky130_fd_sc_hd__dfxtp_1)
+   0.12    0.12 ^ domain_b_ff/Q (sky130_fd_sc_hd__dfxtp_1)
+   0.00    0.12 ^ data_out (out)
+           0.12   data arrival time
+
+  20.00   20.00   clock clk_slow (rise edge)
+   0.00   20.00   clock network delay (ideal)
+   0.00   20.00   clock reconvergence pessimism
+  -2.00   18.00   output external delay
+          18.00   data required time
+---------------------------------------------------------
+          18.00   data required time
+          -0.12   data arrival time
+---------------------------------------------------------
+          17.88   slack (MET)
+
+
+Startpoint: sync_ff2 (rising edge-triggered flip-flop clocked by clk_slow)
+Endpoint: domain_b_ff (rising edge-triggered flip-flop clocked by clk_slow)
+Path Group: clk_slow
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock clk_slow (rise edge)
+   0.00    0.00   clock network delay (ideal)
+   0.00    0.00 ^ sync_ff2/CLK (sky130_fd_sc_hd__dfxtp_1)
+   0.12    0.12 ^ sync_ff2/Q (sky130_fd_sc_hd__dfxtp_1)
+   0.00    0.12 ^ domain_b_ff/D (sky130_fd_sc_hd__dfxtp_1)
+           0.12   data arrival time
+
+  20.00   20.00   clock clk_slow (rise edge)
+   0.00   20.00   clock network delay (ideal)
+   0.00   20.00   clock reconvergence pessimism
+          20.00 ^ domain_b_ff/CLK (sky130_fd_sc_hd__dfxtp_1)
+  -0.05   19.95   library setup time
+          19.95   data required time
+---------------------------------------------------------
+          19.95   data required time
+          -0.12   data arrival time
+---------------------------------------------------------
+          19.83   slack (MET)
+
+
+Startpoint: sync_ff1 (rising edge-triggered flip-flop clocked by clk_slow)
+Endpoint: sync_ff2 (rising edge-triggered flip-flop clocked by clk_slow)
+Path Group: clk_slow
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock clk_slow (rise edge)
+   0.00    0.00   clock network delay (ideal)
+   0.00    0.00 ^ sync_ff1/CLK (sky130_fd_sc_hd__dfxtp_1)
+   0.12    0.12 ^ sync_ff1/Q (sky130_fd_sc_hd__dfxtp_1)
+   0.00    0.12 ^ sync_ff2/D (sky130_fd_sc_hd__dfxtp_1)
+           0.12   data arrival time
+
+  20.00   20.00   clock clk_slow (rise edge)
+   0.00   20.00   clock network delay (ideal)
+   0.00   20.00   clock reconvergence pessimism
+          20.00 ^ sync_ff2/CLK (sky130_fd_sc_hd__dfxtp_1)
+  -0.05   19.95   library setup time
+          19.95   data required time
+---------------------------------------------------------
+          19.95   data required time
+          -0.12   data arrival time
+---------------------------------------------------------
+          19.83   slack (MET)
+
+
+
+--- RÉSUMÉ DES SLACKS (Tous groupes) ---
+Startpoint                           Endpoint                               Slack
+--------------------------------------------------------------------------------
+data_in (input)                      domain_a_ff/D (sky130_fd_sc_hd__dfxtp_1)    7.95
+domain_b_ff/Q (cdc_simple)           data_out (output)                      17.88
+
+
+--- STATISTIQUES DES CHEMINS ---
+Clock clk_fast
+No launch/capture paths found.
+
+Clock clk_slow
+   0.00 source latency sync_ff1/CLK ^
+   0.00 target latency sync_ff2/CLK ^
+   0.00 CRPR
+--------------
+   0.00 setup skew
+
+clk_fast period_min = 0.00 fmax = inf
+clk_slow period_min = 0.17 fmax = 5724.12
+
+==========================================
+  ✓ ANALYSE CDC TERMINEE
+==========================================

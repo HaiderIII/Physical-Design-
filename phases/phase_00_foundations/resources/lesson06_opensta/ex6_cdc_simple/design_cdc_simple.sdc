@@ -9,7 +9,7 @@ set_clock_groups -asynchronous -group {clk_fast} -group {clk_slow}
 
 # Limiter le delai combinatoire sur le chemin CDC
 # Valeur = 80% de la periode de clk_slow (0.8 * 20ns = 16ns)
-set_max_delay -from [get_clocks clk_fast] -to [get_clocks clk_slow] 16.0
+set_max_delay -from [get_clocks clk_fast] -to [get_clocks clk_slow] 0.1
 
 # Ignorer le timing setup/hold entre les domaines (deja gere par set_clock_groups)
 # Mais on garde set_max_delay pour limiter le skew combinatoire

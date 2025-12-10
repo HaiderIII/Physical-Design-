@@ -1,73 +1,66 @@
-# Script OpenSTA Simple - Analyse CDC
-# Ex6 - Clock Domain Crossing
+# Script OpenSTA - Analyse CDC Simple (Ex6)
 
 puts "\n=========================================="
 puts "  INITIALISATION OpenSTA - Ex6 CDC"
-puts "==========================================\n"
+puts "=========================================="
 
-# Chemins relatifs depuis le repertoire de l'exercice
-set base_path "$env(HOME)/projects/Physical-Design/phases/phase_00_foundations/resources/lesson06_opensta/ex6_cdc_simple"
+set LIB_PATH    "phases/phase_00_foundations/resources/lesson06_opensta/ex6_cdc_simple/sky130_fd_sc_hd__tt_025C_1v80.lib"
+set VERILOG_PATH "phases/phase_00_foundations/resources/lesson06_opensta/ex6_cdc_simple/design_cdc_simple.v"
+set SDC_PATH    "phases/phase_00_foundations/resources/lesson06_opensta/ex6_cdc_simple/design_cdc_simple.sdc"
 
-# Charger la library (dans le meme repertoire que le design)
-set lib_path "${base_path}/sky130_fd_sc_hd__tt_025C_1v80.lib"
-puts "Chargement de la library : $lib_path"
-read_liberty $lib_path
+puts "\nChargement de la library : [file normalize $LIB_PATH]"
+read_liberty $LIB_PATH
 
-# Charger le netlist Verilog
-set verilog_path "${base_path}/design_cdc_simple.v"
-puts "Chargement du netlist : $verilog_path"
-read_verilog $verilog_path
+puts "Chargement du netlist : [file normalize $VERILOG_PATH]"
+read_verilog $VERILOG_PATH
 link_design cdc_simple
 
-# Charger les contraintes SDC
-set sdc_path "${base_path}/design_cdc_simple.sdc"
-puts "Chargement des contraintes : $sdc_path"
-read_sdc $sdc_path
+puts "Chargement des contraintes : [file normalize $SDC_PATH]"
+read_sdc $SDC_PATH
 
-# Rapport global
 puts "\n=========================================="
 puts "  RAPPORT TIMING CDC - Ex6 Simple"
-puts "==========================================\n"
+puts "=========================================="
 
-# Verifier les horloges
 puts "\n--- HORLOGES DEFINIES ---"
-report_clocks
+foreach clk [all_clocks] {
+    set clk_name [get_property $clk full_name]
+    set clk_period [get_property $clk period]
+    puts "  $clk_name : Période = $clk_period ns"
+}
 
-# Verifier les groupes d'horloges asynchrones
-puts "\n--- GROUPES D'HORLOGES ASYNCHRONES ---"
-puts "Commande: report_clock_properties (si disponible)"
-# Note: Certaines versions d'OpenSTA n'ont pas report_clock_properties
+puts "\n--- 1. CHEMIN D'ENTRÉE (data_in -> domain_a_ff) ---"
+report_checks -from [get_ports data_in] -to [get_pins domain_a_ff/D] -path_delay max -format full_clock_expanded
 
-# Chemin critique global
-puts "\n--- CHEMIN CRITIQUE GLOBAL ---"
-report_checks -path_delay max -format full_clock_expanded
+puts "\n--- 2. CHEMIN CDC CROSSING (domain_a_ff -> sync_ff1) ---"
+puts "    ⚠️  Chemins asynchrones - Utilisation de set_max_delay"
+report_checks -from [get_pins domain_a_ff/Q] -to [get_pins sync_ff1/D] -path_delay max -format full_clock_expanded -unconstrained
 
-# Chemins inter-domaines (CDC)
-puts "\n--- CHEMINS CDC (clk_fast -> clk_slow) ---"
-report_checks -from [get_clocks clk_fast] -to [get_clocks clk_slow] -format full_clock_expanded
+puts "\n--- 3. SYNCHRONIZER Stage 1->2 (sync_ff1 -> sync_ff2) ---"
+report_checks -from [get_pins sync_ff1/Q] -to [get_pins sync_ff2/D] -path_delay max -format full_clock_expanded
 
-# Chemin du synchronizer (sync_ff1 -> sync_ff2)
-puts "\n--- CHEMIN SYNCHRONIZER (sync_ff1 -> sync_ff2) ---"
-puts "Recherche du chemin sync_ff1 -> sync_ff2..."
-# Note: La syntaxe exacte depend de la hierarchie du netlist
+puts "\n--- 4. SYNCHRONIZER Stage 2->Out (sync_ff2 -> domain_b_ff) ---"
+report_checks -from [get_pins sync_ff2/Q] -to [get_pins domain_b_ff/D] -path_delay max -format full_clock_expanded
 
-# Chemins non-contraints (doit etre vide !)
-puts "\n--- CHEMINS NON-CONTRAINTS (doit etre vide) ---"
-report_checks -unconstrained
+puts "\n--- 5. CHEMIN DE SORTIE (domain_b_ff -> data_out) ---"
+report_checks -from [get_pins domain_b_ff/Q] -to [get_ports data_out] -path_delay max -format full_clock_expanded
 
-# Max delay violations
-puts "\n--- VIOLATIONS MAX_DELAY ---"
-report_checks -path_delay max -violators
-
-# Resume final
 puts "\n=========================================="
-puts "  FIN DE L'ANALYSE"
-puts "==========================================\n"
+puts "  RÉSUMÉ GLOBAL"
+puts "=========================================="
 
-puts "NOTES IMPORTANTES :"
-puts "1. Les chemins CDC sont marques 'asynchronous' grace a set_clock_groups"
-puts "2. set_max_delay limite le delai combinatoire a 16ns (80% de 20ns)"
-puts "3. Le synchronizer 2-FF assure la robustesse contre la metastabilite"
-puts ""
+puts "\n--- TOP 5 CHEMINS CRITIQUES (clk_slow) ---"
+report_checks -to [get_clocks clk_slow] -path_delay max -group_count 5
+
+puts "\n--- RÉSUMÉ DES SLACKS (Tous groupes) ---"
+report_checks -path_delay max -format summary
+
+puts "\n--- STATISTIQUES DES CHEMINS ---"
+report_clock_skew
+report_clock_min_period
+
+puts "\n=========================================="
+puts "  ✓ ANALYSE CDC TERMINEE"
+puts "=========================================="
 
 exit
