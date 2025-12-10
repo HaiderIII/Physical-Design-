@@ -1,0 +1,22 @@
+
+# ==============================================================================
+# DOCKER
+# ==============================================================================
+# Ne pas versionner les volumes/données temporaires Docker
+docker/volumes/
+docker/.env.local
+
+# Les images Docker ne sont pas versionnées (trop lourdes)
+# Les utilisateurs feront: docker pull theopenroadproject/openroad:latest
+
+# ==============================================================================
+# DOCKER
+# ==============================================================================
+docker/volumes/
+docker/.env.local
+
+# ==============================================================================
+# DOCKER
+# ==============================================================================
+docker/volumes/
+docker/.env.local

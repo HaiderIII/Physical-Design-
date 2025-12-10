@@ -1,0 +1,8 @@
+# Cell inventory
+# Format : cell_type count area_per_cell
+
+NAND2 1000 5.44
+NOR2 800 6.8
+INV 500 2.72
+DFF 200 27.2
+BUF 50 4.08
