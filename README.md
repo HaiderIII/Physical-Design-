@@ -403,7 +403,7 @@ GitHub Issues:
 Report bugs or ask questions
 
 Discussions:
-https://github.com/your-username/Physical-Design/discussions
+https://github.com/HaiderIII/Physical-Design/discussions
 
 Slack Channel:
 Join our Slack workspace for real-time help
