@@ -1,0 +1,193 @@
+library (multi_corner_fast) {
+  delay_model : table_lookup;
+  time_unit : "1ns";
+  voltage_unit : "1V";
+  current_unit : "1mA";
+  capacitive_load_unit (1, pf);
+  
+  nom_process : 1.0;
+  nom_temperature : 0.0;
+  nom_voltage : 1.10;
+  
+  slew_lower_threshold_pct_rise : 20.0;
+  slew_upper_threshold_pct_rise : 80.0;
+  slew_lower_threshold_pct_fall : 20.0;
+  slew_upper_threshold_pct_fall : 80.0;
+  input_threshold_pct_rise : 50.0;
+  input_threshold_pct_fall : 50.0;
+  output_threshold_pct_rise : 50.0;
+  output_threshold_pct_fall : 50.0;
+  
+  operating_conditions (FAST) {
+    process : 1.0;
+    temperature : 0.0;
+    voltage : 1.10;
+  }
+  default_operating_conditions : FAST;
+  
+  wire_load("small") {
+    resistance : 0.1;
+    capacitance : 0.2;
+    area : 1.0;
+    slope : 0.5;
+    fanout_length(1, 1.0);
+  }
+  default_wire_load : "small";
+  
+  cell (DFF) {
+    area : 10.0;
+    ff (IQ, IQN) {
+      next_state : "D";
+      clocked_on : "CLK";
+    }
+    pin (D) {
+      direction : input;
+      capacitance : 0.008;
+    }
+    pin (CLK) {
+      direction : input;
+      capacitance : 0.012;
+      clock : true;
+    }
+    pin (Q) {
+      direction : output;
+      function : "IQ";
+      timing () {
+        related_pin : "CLK";
+        timing_type : rising_edge;
+        cell_rise (scalar) {
+          values ("0.150");
+        }
+        cell_fall (scalar) {
+          values ("0.140");
+        }
+        rise_transition (scalar) {
+          values ("0.060");
+        }
+        fall_transition (scalar) {
+          values ("0.060");
+        }
+      }
+    }
+    timing () {
+      timing_type : setup_rising;
+      related_pin : "CLK";
+      rise_constraint (scalar) {
+        values ("0.120");
+      }
+      fall_constraint (scalar) {
+        values ("0.120");
+      }
+    }
+    timing () {
+      timing_type : hold_rising;
+      related_pin : "CLK";
+      rise_constraint (scalar) {
+        values ("0.050");
+      }
+      fall_constraint (scalar) {
+        values ("0.050");
+      }
+    }
+  }
+  
+  cell (BUF) {
+    area : 2.0;
+    pin (A) {
+      direction : input;
+      capacitance : 0.006;
+    }
+    pin (Y) {
+      direction : output;
+      function : "A";
+      timing () {
+        related_pin : "A";
+        cell_rise (scalar) {
+          values ("0.100");
+        }
+        cell_fall (scalar) {
+          values ("0.090");
+        }
+        rise_transition (scalar) {
+          values ("0.050");
+        }
+        fall_transition (scalar) {
+          values ("0.050");
+        }
+      }
+    }
+  }
+  
+  cell (INV) {
+    area : 1.5;
+    pin (A) {
+      direction : input;
+      capacitance : 0.005;
+    }
+    pin (Y) {
+      direction : output;
+      function : "!A";
+      timing () {
+        related_pin : "A";
+        cell_rise (scalar) {
+          values ("0.090");
+        }
+        cell_fall (scalar) {
+          values ("0.080");
+        }
+        rise_transition (scalar) {
+          values ("0.045");
+        }
+        fall_transition (scalar) {
+          values ("0.045");
+        }
+      }
+    }
+  }
+  
+  cell (AND2) {
+    area : 3.0;
+    pin (A) {
+      direction : input;
+      capacitance : 0.006;
+    }
+    pin (B) {
+      direction : input;
+      capacitance : 0.006;
+    }
+    pin (Y) {
+      direction : output;
+      function : "(A & B)";
+      timing () {
+        related_pin : "A";
+        cell_rise (scalar) {
+          values ("0.120");
+        }
+        cell_fall (scalar) {
+          values ("0.110");
+        }
+        rise_transition (scalar) {
+          values ("0.055");
+        }
+        fall_transition (scalar) {
+          values ("0.055");
+        }
+      }
+      timing () {
+        related_pin : "B";
+        cell_rise (scalar) {
+          values ("0.120");
+        }
+        cell_fall (scalar) {
+          values ("0.110");
+        }
+        rise_transition (scalar) {
+          values ("0.055");
+        }
+        fall_transition (scalar) {
+          values ("0.055");
+        }
+      }
+    }
+  }
+}

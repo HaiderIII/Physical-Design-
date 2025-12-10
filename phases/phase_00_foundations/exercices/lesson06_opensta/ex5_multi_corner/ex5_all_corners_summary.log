@@ -1,0 +1,75 @@
+
+============================================================
+MULTI-CORNER TIMING ANALYSIS - ALL CORNERS
+Circuit: 3-Stage Pipeline (FF1 → FF2 → FF3)
+============================================================
+
+==========================================
+CORNER 1/3: SLOW (SS, 0.9V, 125°C)
+==========================================
+
+✓ Setup slack: 3.20 ns
+✓ Hold slack:  0.65 ns
+
+==========================================
+CORNER 2/3: TYPICAL (TT, 1.0V, 25°C)
+==========================================
+
+✓ Setup slack: 3.40 ns
+✓ Hold slack:  0.48 ns
+
+==========================================
+CORNER 3/3: FAST (FF, 1.1V, 0°C)
+==========================================
+
+✓ Setup slack: 3.55 ns
+✓ Hold slack:  0.34 ns
+
+
+============================================================
+MULTI-CORNER SLACK COMPARISON
+============================================================
+
+Corner       | Setup Slack     | Hold Slack     
+-------------|-----------------|------------------
+SLOW         |           3.20 ns |           0.65 ns
+TYPICAL      |           3.40 ns |           0.48 ns
+FAST         |           3.55 ns |           0.34 ns
+
+============================================================
+EXPECTED CORNER CHARACTERISTICS
+============================================================
+
+┌─────────────┬──────────────┬────────────┬──────────────┐
+│   Corner    │ Process/V/T  │ Delay      │ Critical For │
+├─────────────┼──────────────┼────────────┼──────────────┤
+│ SLOW        │ SS/0.9V/125°C│ LONGEST    │ SETUP        │
+│ TYPICAL     │ TT/1.0V/25°C │ NOMINAL    │ BOTH         │
+│ FAST        │ FF/1.1V/0°C  │ SHORTEST   │ HOLD         │
+└─────────────┴──────────────┴────────────┴──────────────┘
+
+KEY OBSERVATIONS:
+  ✓ SLOW corner  → Smallest setup slack (worst case for max delay)
+  ✓ FAST corner  → Smallest hold slack (worst case for min delay)
+  ✓ TYPICAL corner → Nominal conditions
+
+  ⚠️  Design MUST pass ALL corners for tape-out!
+
+  🔴 SETUP: Worst in SLOW corner (3.20 ns) ← CRITICAL
+  �� HOLD: Worst in FAST corner (0.34 ns) ← CRITICAL
+
+============================================================
+
+✅ ALL CORNERS PASS! Design is ready for tape-out.
+
+📁 Individual logs saved to:
+   • phases/phase_00_foundations/exercices/lesson06_opensta/ex5_multi_corner/ex5_slow_output.log
+   • phases/phase_00_foundations/exercices/lesson06_opensta/ex5_multi_corner/ex5_typical_output.log
+   • phases/phase_00_foundations/exercices/lesson06_opensta/ex5_multi_corner/ex5_fast_output.log
+
+📊 To view detailed timing:
+   less phases/phase_00_foundations/exercices/lesson06_opensta/ex5_multi_corner/ex5_slow_output.log
+
+🔍 Debug: Check if slacks were extracted:
+   grep 'worst slack' phases/phase_00_foundations/exercices/lesson06_opensta/ex5_multi_corner/ex5_slow_output.log
+

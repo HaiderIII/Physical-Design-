@@ -1,0 +1,188 @@
+OpenSTA 2.7.0 9c9b5659d6 Copyright (c) 2025, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+
+==========================================
+EXERCISE 5: MULTI-CORNER TIMING ANALYSIS
+Circuit: 3-Stage Pipeline (FF1 → FF2 → FF3)
+==========================================
+
+
+==========================================
+CORNER: SLOW (SS, 0.9V, 125°C)
+==========================================
+
+INFO: Loading library for SLOW (SS, 0.9V, 125°C)...
+Warning: phases/phase_00_foundations/resources/lesson06_opensta/ex5_multi_corner/multi_corner_slow.lib line 75, scalar group not in timing group.
+Warning: phases/phase_00_foundations/resources/lesson06_opensta/ex5_multi_corner/multi_corner_slow.lib line 78, scalar group not in timing group.
+Warning: phases/phase_00_foundations/resources/lesson06_opensta/ex5_multi_corner/multi_corner_slow.lib line 85, scalar group not in timing group.
+Warning: phases/phase_00_foundations/resources/lesson06_opensta/ex5_multi_corner/multi_corner_slow.lib line 88, scalar group not in timing group.
+✓ Library loaded
+
+INFO: Reading Verilog netlist...
+✓ Design linked
+
+INFO: Applying SDC constraints...
+✓ Constraints applied
+
+--- SETUP TIMING (Max Delay Analysis) ---
+Startpoint: ff3 (rising edge-triggered flip-flop clocked by clk)
+Endpoint: q_out (output port clocked by clk)
+Path Group: clk
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock clk (rise edge)
+   0.00    0.00   clock network delay (ideal)
+   0.00    0.00 ^ ff3/CLK (DFF)
+   0.50    0.50 ^ ff3/Q (DFF)
+   0.00    0.50 ^ q_out (out)
+           0.50   data arrival time
+
+   5.00    5.00   clock clk (rise edge)
+   0.00    5.00   clock network delay (ideal)
+  -0.30    4.70   clock uncertainty
+   0.00    4.70   clock reconvergence pessimism
+  -1.00    3.70   output external delay
+           3.70   data required time
+---------------------------------------------------------
+           3.70   data required time
+          -0.50   data arrival time
+---------------------------------------------------------
+           3.20   slack (MET)
+
+
+
+--- HOLD TIMING (Min Delay Analysis) ---
+Startpoint: ff3 (rising edge-triggered flip-flop clocked by clk)
+Endpoint: q_out (output port clocked by clk)
+Path Group: clk
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock clk (rise edge)
+   0.00    0.00   clock network delay (ideal)
+   0.00    0.00 ^ ff3/CLK (DFF)
+   0.45    0.45 v ff3/Q (DFF)
+   0.00    0.45 v q_out (out)
+           0.45   data arrival time
+
+   0.00    0.00   clock clk (rise edge)
+   0.00    0.00   clock network delay (ideal)
+   0.30    0.30   clock uncertainty
+   0.00    0.30   clock reconvergence pessimism
+  -0.50   -0.20   output external delay
+          -0.20   data required time
+---------------------------------------------------------
+          -0.20   data required time
+          -0.45   data arrival time
+---------------------------------------------------------
+           0.65   slack (MET)
+
+
+
+--- TOP 5 SETUP PATHS ---
+Warning: ex5_slow.tcl line 1, report_checks -group_count is deprecated. Use -group_path_count instead.
+Startpoint: ff3 (rising edge-triggered flip-flop clocked by clk)
+Endpoint: q_out (output port clocked by clk)
+Path Group: clk
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock clk (rise edge)
+   0.00    0.00   clock network delay (ideal)
+   0.00    0.00 ^ ff3/CLK (DFF)
+   0.50    0.50 ^ ff3/Q (DFF)
+   0.00    0.50 ^ q_out (out)
+           0.50   data arrival time
+
+   5.00    5.00   clock clk (rise edge)
+   0.00    5.00   clock network delay (ideal)
+  -0.30    4.70   clock uncertainty
+   0.00    4.70   clock reconvergence pessimism
+  -1.00    3.70   output external delay
+           3.70   data required time
+---------------------------------------------------------
+           3.70   data required time
+          -0.50   data arrival time
+---------------------------------------------------------
+           3.20   slack (MET)
+
+
+
+--- TOP 5 HOLD PATHS ---
+Warning: ex5_slow.tcl line 1, report_checks -group_count is deprecated. Use -group_path_count instead.
+Startpoint: ff3 (rising edge-triggered flip-flop clocked by clk)
+Endpoint: q_out (output port clocked by clk)
+Path Group: clk
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock clk (rise edge)
+   0.00    0.00   clock network delay (ideal)
+   0.00    0.00 ^ ff3/CLK (DFF)
+   0.45    0.45 v ff3/Q (DFF)
+   0.00    0.45 v q_out (out)
+           0.45   data arrival time
+
+   0.00    0.00   clock clk (rise edge)
+   0.00    0.00   clock network delay (ideal)
+   0.30    0.30   clock uncertainty
+   0.00    0.30   clock reconvergence pessimism
+  -0.50   -0.20   output external delay
+          -0.20   data required time
+---------------------------------------------------------
+          -0.20   data required time
+          -0.45   data arrival time
+---------------------------------------------------------
+           0.65   slack (MET)
+
+
+
+--- TIMING SUMMARY ---
+
+--- WORST SLACK (SETUP) ---
+worst slack max 3.20
+
+--- WORST SLACK (HOLD) ---
+worst slack min 0.65
+
+--- TNS (Total Negative Slack) ---
+tns max 0.00
+
+--- WNS (Worst Negative Slack) ---
+wns max 0.00
+
+✅ SLOW corner analysis completed!
+
+INFO: Creating analysis scripts for other corners...
+
+✓ Created: ex5_typical.tcl
+✓ Created: ex5_fast.tcl
+
+
+==========================================
+MULTI-CORNER ANALYSIS GUIDE
+==========================================
+
+To analyze other corners, run:
+  sta -exit phases/phase_00_foundations/exercices/lesson06_opensta/ex5_multi_corner/ex5_typical.tcl 2>&1 | tee phases/phase_00_foundations/exercices/lesson06_opensta/ex5_multi_corner/ex5_typical_output.log
+
+  sta -exit phases/phase_00_foundations/exercices/lesson06_opensta/ex5_multi_corner/ex5_fast.tcl 2>&1 | tee phases/phase_00_foundations/exercices/lesson06_opensta/ex5_multi_corner/ex5_fast_output.log
+
+KEY OBSERVATIONS:
+  • SLOW corner → Worst for SETUP (longest delays)
+  • FAST corner → Worst for HOLD (shortest delays)
+  • TYPICAL corner → Nominal conditions
+  • Design must pass ALL corners for tape-out
+==========================================
+
+✅ Multi-corner analysis script completed!
+
