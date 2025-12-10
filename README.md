@@ -448,9 +448,9 @@ This project is licensed under the MIT License - see LICENSE file for details
 
 ## Contact
 
-Maintainer: Your Name
-Email: your.email@example.com
-GitHub: @your-username
+Maintainer: Faiz MOHAMMAD
+Email: faiz.mohammad.pro@protonmail.com
+GitHub: HaiderIII
 
 For questions or support, please open an issue on GitHub
 
